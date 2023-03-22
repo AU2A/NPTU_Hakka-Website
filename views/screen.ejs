@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Lego Recognition</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/recorderjs/0.1.0/recorder.js'></script>
+</head>
+
+<!-- <body style='margin:0;padding:0;border: 0;'> -->
+
+<body style="display: flex;flex-direction: row">
+    <div>
+        <video  id="video1" width="600" height="600">
+            <source src="lego/輸送帶鏡頭.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+          </video>
+        <p style="font-size: 30px;" id="status">當前狀態：辨識中</p>
+        <p style="font-size: 30px;" id="result">當前辨識物件結果：</p>
+        <p style="font-size: 30px;" id="credibility">當前辨識可信度：</p>
+        <button style="font-size: 30px;" onclick="myFunction()">緊急停止</button>
+        <p style="font-size: 30px;" id="time">當前時間：2023/1/17 22:17</p>
+        <p>Lego Object Recognition - Designed by Aura</p>
+    </div>
+    <div style="width: 30px;">
+    </div>
+    <div style="width: 20px;background-color: #A9DFBF">
+    </div>
+    <div style="width: 300px;background-color: #A9DFBF">
+        <p style="font-size: 30px;">目前分類結果</p>
+        <div>
+            <p style="font-size: 30px;">垂直連接器(angleConn)</p>
+            <p style="font-size: 20px;">● angleConn_H: 4</p>
+            <p style="font-size: 20px;">● angleConn_I: 3</p>
+            <p style="font-size: 20px;" id="angleConn_L">● angleConn_L: 2</p>
+            <p style="font-size: 20px;">● angleConn_U: 8</p>
+        </div>
+        <div>
+            <p style="font-size: 30px;">十字軸(axle)</p>
+            <p style="font-size: 20px;">● axle_4: 9</p>
+            <p style="font-size: 20px;">● axle_6: 7</p>
+            <p style="font-size: 20px;">● axle_8: 13</p>
+        </div>
+        <div>
+            <p style="font-size: 30px;">軸連接器(axleConn)</p>
+            <p style="font-size: 20px;">● axleConn_1x1o: 7</p>
+            <p style="font-size: 20px;">● axleConn_1x2o: 0</p>
+            <p style="font-size: 20px;">● axleConn_2: 14</p>
+            <p style="font-size: 20px;">● axleConn_6: 15</p>
+        </div>
+    </div>
+    <div style="width: 20px;background-color: #A9DFBF">
+    </div>
+    <div style="width: 20px;background-color: #F6DDCC">
+    </div>
+    <div style="width: 270px;background-color: #F6DDCC">
+        <p style="font-size: 30px;">　　</p>
+        <div>
+            <p style="font-size: 30px;">橫桿(beam)</p>
+            <p style="font-size: 20px;">● beam_5: 3</p>
+            <p style="font-size: 20px;" id="beam_7">● beam_7: 6</p>
+            <p style="font-size: 20px;">● beam_9: 7</p>
+            <p style="font-size: 20px;">● beam_11: 2</p>
+            <p style="font-size: 20px;">● beam_13: 10</p>
+        </div>
+        <div>
+            <p style="font-size: 30px;">曲型橫桿(curvBeam)</p>
+            <p style="font-size: 20px;">● curvBeam_24: 3</p>
+            <p style="font-size: 20px;">● curvBeam_35: 12</p>
+            <p style="font-size: 20px;" id="curvBeam_44">● curvBeam_44: 9</p>
+            <p style="font-size: 20px;">● curvBeam_337: 4</p>
+        </div>
+    </div>
+    <div style="width: 20px;background-color: #F6DDCC">
+    </div>
+    <div style="width: 20px;background-color: #AED6F1">
+    </div>
+    <div style="width: 270px;background-color: #AED6F1">
+        <p style="font-size: 30px;">　　</p>
+        <div>
+            <p style="font-size: 30px;">齒輪(gear)</p>
+            <p style="font-size: 20px;">● gear_16: 2</p>
+            <p style="font-size: 20px;">● gear_24: 1</p>
+            <p style="font-size: 20px;">● gear_36: 6</p>
+            <p style="font-size: 20px;" id="gear_48">● gear_48: 13</p>
+        </div>
+        <div>
+            <p style="font-size: 30px;">插銷(pin)</p>
+            <p style="font-size: 20px;">● pin_black: 7</p>
+            <p style="font-size: 20px;">● pin_blue: 1</p>
+            <p style="font-size: 20px;">● pin_gray: 5</p>
+            <p style="font-size: 20px;">● pin_yellow: 8</p>
+        </div>
+    </div>
+    <div style="width: 10px;background-color: #AED6F1">
+    </div>
+    <script>
+        let num=1676639057000;
+    function sleep (time) {
+        return new Promise((resolve) => setTimeout(resolve, time));
+    }
+    function autoRefresh() {
+        num=num+100
+        const date = new Date(num)
+        document.getElementById("time").textContent=date.toLocaleString();
+    }
+    setInterval('autoRefresh()', 100);
+
+    async function myFunction() {
+        await sleep(20000);
+        document.getElementById("video1").play();
+        await sleep(8000);
+        document.getElementById("status").textContent="當前狀態：進料中";
+        await sleep(3500);
+        document.getElementById("status").textContent="當前狀態：辨識中";
+        await sleep(4500);
+        document.getElementById("status").textContent="當前狀態：辨識到物件";
+        document.getElementById("result").textContent="當前辨識物件結果：gear_48";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(1/1)";
+        await sleep(1300);
+        document.getElementById("result").textContent="當前辨識物件結果：gear_48";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(2/2)";
+        await sleep(340);
+        document.getElementById("result").textContent="當前辨識物件結果：gear_48";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(3/3)";
+        await sleep(360);
+        document.getElementById("result").textContent="當前辨識物件結果：gear_48";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(4/4)";
+        await sleep(500);
+        document.getElementById("status").textContent="當前狀態：將物件送到 齒輪 區";
+        document.getElementById("result").textContent="當前辨識物件結果：gear_48";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(4/4)";
+        document.getElementById("gear_48").style="font-size: 20px;color: red;";
+        document.getElementById("gear_48").textContent="● gear_48: 14";
+        await sleep(10000);
+        document.getElementById("gear_48").style="font-size: 20px;color: black;";
+        document.getElementById("status").textContent="當前狀態：辨識中";
+        document.getElementById("result").textContent="當前辨識物件結果：";
+        document.getElementById("credibility").textContent="當前辨識可信度：";
+        await sleep(3500);
+        document.getElementById("status").textContent="當前狀態：辨識到物件";
+        document.getElementById("result").textContent="當前辨識物件結果：axleConn_1x1o";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(1/1)";
+        await sleep(400);
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_337";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.5　(1/2)";
+        await sleep(320);
+        document.getElementById("result").textContent="當前辨識物件結果：beam_7";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.33　(1/3)";
+        await sleep(310);
+        document.getElementById("result").textContent="當前辨識物件結果：beam_7";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.5　(2/4)";
+        await sleep(290);
+        document.getElementById("result").textContent="當前辨識物件結果：beam_7";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.6　(3/5)";
+        await sleep(330);
+        document.getElementById("result").textContent="當前辨識物件結果：beam_7";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.67　(4/6)";
+        await sleep(360);
+        document.getElementById("result").textContent="當前辨識物件結果：beam_7";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.71　(5/7)";
+        await sleep(300);
+        document.getElementById("result").textContent="當前辨識物件結果：beam_7";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.75　(6/8)";
+        await sleep(320);
+        document.getElementById("status").textContent="當前狀態：將物件送到 橫桿 區";
+        document.getElementById("result").textContent="當前辨識物件結果：beam_7";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.75　(6/8)";
+        document.getElementById("beam_7").style="font-size: 20px;color: red;";
+        document.getElementById("beam_7").textContent="● beam_7: 7";
+        await sleep(7500);
+        document.getElementById("beam_7").style="font-size: 20px;color: black;";
+        document.getElementById("status").textContent="當前狀態：辨識中";
+        document.getElementById("result").textContent="當前辨識物件結果：";
+        document.getElementById("credibility").textContent="當前辨識可信度：";
+        await sleep(3500);
+        document.getElementById("status").textContent="當前狀態：辨識到物件";
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(1/1)";
+        await sleep(410);
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(2/2)";
+        await sleep(380);
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(3/3)";
+        await sleep(290);
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(4/4)";
+        await sleep(301);
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(5/5)";
+        await sleep(330);
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(6/6)";
+        await sleep(360);
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(7/7)";
+        await sleep(320);
+        document.getElementById("status").textContent="當前狀態：將物件送到 曲型橫桿 區";
+        document.getElementById("result").textContent="當前辨識物件結果：curvBeam_44";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(7/7)";
+        document.getElementById("curvBeam_44").style="font-size: 20px;color: red;";
+        document.getElementById("curvBeam_44").textContent="● curvBeam_44: 10";
+        await sleep(9500);
+        document.getElementById("curvBeam_44").style="font-size: 20px;color: black;";
+        document.getElementById("status").textContent="當前狀態：辨識中";
+        document.getElementById("result").textContent="當前辨識物件結果：";
+        document.getElementById("credibility").textContent="當前辨識可信度：";
+        await sleep(2000);
+        document.getElementById("status").textContent="當前狀態：辨識到物件";
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_H";
+        document.getElementById("credibility").textContent="當前辨識可信度：1.00　(1/1)";
+        await sleep(350);
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.5　(1/2)";
+        await sleep(420);
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.67　(2/3)";
+        await sleep(290);
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.75　(3/4)";
+        await sleep(201);
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.8　(4/5)";
+        await sleep(410);
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.83　(5/6)";
+        await sleep(360);
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.86　(6/7)";
+        await sleep(460);
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.88　(7/8)";
+        await sleep(320);
+        document.getElementById("status").textContent="當前狀態：將物件送到 垂直連接器 區";
+        document.getElementById("result").textContent="當前辨識物件結果：angleConn_L";
+        document.getElementById("credibility").textContent="當前辨識可信度：0.88　(7/8)";
+        document.getElementById("angleConn_L").style="font-size: 20px;color: red;";
+        document.getElementById("angleConn_L").textContent="● angleConn_L: 3";
+        await sleep(3000);
+        document.getElementById("angleConn_L").style="font-size: 20px;color: black;";
+        document.getElementById("status").textContent="當前狀態：辨識中";
+        document.getElementById("result").textContent="當前辨識物件結果：";
+        document.getElementById("credibility").textContent="當前辨識可信度：";
+
+    }
+    function sleep(milliseconds) {  
+      return new Promise(resolve => setTimeout(resolve, milliseconds));  
+   }  
+
+    
+    </script>
+</body>
+
+</html>
