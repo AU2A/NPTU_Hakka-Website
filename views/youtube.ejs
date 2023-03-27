@@ -20,6 +20,7 @@
     <div style='text-align: center;'>
         <div id="player"></div>
     </div>
+    <p id='response' style='padding-left: 15%;text-align: left;font-size: 30px;'></p>
 </body>
 <script>
     var tag = document.createElement('script');
@@ -56,10 +57,11 @@
     var done = false;
     function onPlayerStateChange(event) {
         if (event.data == YT.PlayerState.PLAYING && !done) {
-            setTimeout(stopVideo, 6000);
+            // setTimeout(stopVideo, 6000);
             done = true;
         }
     }
+    
     function stopVideo() {
         player.stopVideo();
     }
@@ -67,13 +69,25 @@
     function reloadurl() {
         var val = document.getElementById("url").value;
         console.log(val)
-        player.loadVideoById(videoId=val,startSeconds=0)
-
-        // player
+        player.loadVideoById(videoId = val, startSeconds = 0)
+        fetch('https://hakka.corelab.dev/uploadyt?url=' + val, {
+            method: 'get',
+        }).then(res => res.text()).then(res => {
+            tagurl=res
+            console.log(tag);
+        })
     }
 
     function autoRefresh() {
-        console.log(player.playerInfo.currentTime);
+        if(tagurl!='')
+            console.log(player.playerInfo.currentTime);
+            if (tag != '') {
+                fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl, {
+                    method: 'get',
+                }).then(res => res.text()).then(res => {
+                    document.getElementById('response').innerHTML = res;
+                })
+            }
     }
     setInterval('autoRefresh()', 500);
 </script>

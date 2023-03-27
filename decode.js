@@ -60,6 +60,20 @@ app.get('/decode', (req, res) => {
     res.send(temp)
 })
 
+app.get('/decodeyt', (req, res) => {
+    tag=req.originalUrl.split('tag=')[1].split('.')[0]
+    var temp=''
+    try{
+        temp = execSync('cat openai/decode/'+tag+'.srt', { shell: 'bash', encoding: 'utf-8' })
+    }catch{
+        temp=''
+    }
+    if(temp==''){
+        temp='請稍後...'
+    }
+    res.send(temp)
+})
+
 // app.listen(port, () => {
 //     console.log(`Example app listening at http://localhost:${port}`)
 // })

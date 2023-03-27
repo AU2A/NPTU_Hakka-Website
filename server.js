@@ -96,7 +96,23 @@ app.post('/upload_files', upload.any('file'), (req, res) => {
 //   res.send(output)
 // })
 
+app.get('/uploadyt', (req, res) => {
+  tag=req.originalUrl.split('url=')[1]
 
+  var temp=''
+  try{
+    // console.log('echo https://www.youtube.com/watch?v='+tag+' >> aidecodeList.txt')
+      execSync('echo https://www.youtube.com/watch?v='+tag+' >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+      // if(tag.split('_')[0]=='ai'){
+      //     temp = execSync('cat openai/'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
+      // }else{
+      //     temp = execSync('cat decode/'+tag+'.txt', { shell: 'bash', encoding: 'utf-8' })
+      // }
+  }catch{
+      temp=''
+  }
+  res.send(tag)
+})
 
 // app.listen(port, () => {
 //   console.log(`Example app listening at http://localhost:${port}`)
