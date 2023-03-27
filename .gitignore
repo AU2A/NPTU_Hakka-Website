@@ -3,3 +3,5 @@
 upload/*
 decode/*
 node_modules/*
+openai/*
+upload/*

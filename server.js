@@ -42,6 +42,9 @@ app.get('/', (req, res) => {
   })
   res.render('index')
 })
+app.get('/youtube', (req, res) => {
+  res.render('youtube')
+})
 
 // app.get('/screen', (req, res) => {
 //   res.render('screen')
