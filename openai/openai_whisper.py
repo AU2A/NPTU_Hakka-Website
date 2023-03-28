@@ -50,8 +50,10 @@ def decode():
                         endm, ends = divmod(end, 60)
                         endh, endm = divmod(endm, 60)
                         (start//3600)
-                        output_file.write(str(segment['id']+1)+'\n'+'{:02d}:{:02d}:{:02d}'.format(starth, startm, starts)+',000 --> '+'{:02d}:{:02d}:{:02d}'.format(endh, endm, ends)+',000\n'+segment['text']+'\n\n')
+                        # output_file.write(str(segment['id']+1)+'\n'+'{:02d}:{:02d}:{:02d}'.format(starth, startm, starts)+',000 --> '+'{:02d}:{:02d}:{:02d}'.format(endh, endm, ends)+',000\n'+segment['text']+'\n\n')
+                        output_file.write(str(start)+','+str(end)+','+segment['text']+'*')
                     output_file.close()
+                    print('success'+path)
                 else:
                     print('audio too long')
             else:

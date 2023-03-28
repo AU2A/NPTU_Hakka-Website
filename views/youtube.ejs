@@ -61,35 +61,59 @@
             done = true;
         }
     }
-    
+
     function stopVideo() {
         player.stopVideo();
     }
 
+    var tagurl = ''
+    var lyric = ''
+
     function reloadurl() {
         var val = document.getElementById("url").value;
         console.log(val)
+        tagurl = ''
+        lyric = ''
         player.loadVideoById(videoId = val, startSeconds = 0)
         fetch('https://hakka.corelab.dev/uploadyt?url=' + val, {
             method: 'get',
         }).then(res => res.text()).then(res => {
-            tagurl=res
+            tagurl = res
             console.log(tag);
         })
     }
 
     function autoRefresh() {
-        if(tagurl!='')
+        if (tagurl != '') {
             console.log(player.playerInfo.currentTime);
-            if (tag != '') {
-                fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl, {
-                    method: 'get',
-                }).then(res => res.text()).then(res => {
-                    document.getElementById('response').innerHTML = res;
-                })
-            }
+            fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl, {
+                method: 'get',
+            }).then(res => res.text()).then(res => {
+                lyric = res.split('*');
+            })
+        }
     }
-    setInterval('autoRefresh()', 500);
+    setInterval('autoRefresh()', 1000);
+
+    function refreshlyric() {
+        if (lyric[0] != '請稍後...') {
+            for (i = 0; i < lyric.length; i++) {
+                now = lyric[i].split(',')
+                curtime = player.playerInfo.currentTime
+                if (now[0] < curtime && curtime < now[1]) {
+                    document.getElementById('response').innerHTML = now[2]
+                    break;
+                }
+                // else{
+                //     document.getElementById('response').innerHTML=''
+                // }
+            }
+        }
+        else {
+            document.getElementById('response').innerHTML = '請稍後...'
+        }
+    }
+    setInterval('refreshlyric()', 500);
 </script>
 
 </html>
