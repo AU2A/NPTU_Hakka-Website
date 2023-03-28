@@ -18,6 +18,8 @@
         style='text-align: center;margin: auto;width: auto;max-width: 800px;min-height: 500px;margin-top : 39px;border: 3px solid rgb(255, 203, 143)'>
 
         <p style='padding-top: 15%;text-align: center;font-size: 30px;'>請選擇錄音或上傳音檔</p>
+        <meter id="volumeMeter" high="0.25" max="1" value="0"></meter>
+        <br>
         <button class='record-btn' style='font-size: 40px;'>開始錄音</button>
         <br>
         <a id='recordTime'></a>
@@ -33,9 +35,9 @@
         <a style='text-align: center;font-size: 30px;'>請選擇辨識語言</a>
         <br>
         <select style='font-size: 40px;'  id='lang' >
+            <option value='2'>AI</option>
             <option value='0'>國語</option>
             <option value='1'>客語</option>
-            <option value='2'>AI</option>
         </select>
         <br>
         <br>

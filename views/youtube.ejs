@@ -8,11 +8,19 @@
 
 <body style='margin:0;padding:0;border: 0;'>
     <div>
+        
         <div>
             <p style='text-align: center;font-size: 30px;'>Youtube語音辨識</p>
         </div>
     </div>
     <div style='text-align: center;'>
+        <select style='font-size: 20px;' id='lang'>
+            <option value='0'>tiny</option>
+            <option value='1'>base</option>
+            <option value='2'>small</option>
+            <option value='3'>medium</option>
+            <option value='4'>base_hakka</option>
+        </select>
         <input style='font-size: 20px;' id='url'>
         <input type="button" style='font-size: 20px;' value="送出" onclick="reloadurl()">
     </div>
@@ -35,7 +43,7 @@
         player = new YT.Player('player', {
             height: '390',
             width: '640',
-            videoId: 'M7lc1UVf-VE',
+            videoId: '',
             playerVars: {
                 'playsinline': 1
             },
@@ -48,7 +56,7 @@
 
     // 4. The API will call this function when the video player is ready.
     function onPlayerReady(event) {
-        event.target.playVideo();
+        // event.target.playVideo();
     }
 
     // 5. The API calls this function when the player's state changes.
@@ -65,7 +73,6 @@
     function stopVideo() {
         player.stopVideo();
     }
-
     var tagurl = ''
     var lyric = ''
 
@@ -75,7 +82,7 @@
         tagurl = ''
         lyric = ''
         player.loadVideoById(videoId = val, startSeconds = 0)
-        fetch('https://hakka.corelab.dev/uploadyt?url=' + val, {
+        fetch('https://hakka.corelab.dev/uploadyt?url=' + val+'_'+document.getElementById('lang').value, {
             method: 'get',
         }).then(res => res.text()).then(res => {
             tagurl = res
@@ -97,7 +104,7 @@
 
     function refreshlyric() {
         if (lyric[0] != '請稍後...') {
-            for (i = 0; i < lyric.length; i++) {
+            for (i = 0; i <lyric.length; i++) {
                 now = lyric[i].split(',')
                 curtime = player.playerInfo.currentTime
                 if (now[0] < curtime && curtime < now[1]) {

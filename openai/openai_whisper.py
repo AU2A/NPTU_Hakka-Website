@@ -28,16 +28,28 @@ def decode():
             path=now[0].split('\n')[0]
             if(path.split('://')[0]=='https'):
                 print(path)
-                yt = YouTube(path)
+                yt = YouTube(path.split('_')[0])
                 if yt.length < 5400:
                     video = yt.streams.filter(only_audio=True).first()
                     out_file=video.download(output_path="upload/")
                     base, ext = os.path.splitext(out_file)
                     new_file = base+'.mp3'
                     os.rename(out_file, new_file)
-                    
-                    model = whisper.load_model('base')
-                    print("Whisper model loaded.")
+                    if(path.split('_')[1]=='0'):
+                        model = whisper.load_model('tiny')
+                        print("tiny model loaded.")
+                    elif(path.split('_')[1]=='1'):
+                        model = whisper.load_model('base')
+                        print("base model loaded.")
+                    elif(path.split('_')[1]=='2'):
+                        model = whisper.load_model('small')
+                        print("small model loaded.")
+                    elif(path.split('_')[1]=='3'):
+                        model = whisper.load_model('medium')
+                        print("medium model loaded.")
+                    elif(path.split('_')[1]=='4'):
+                        model = whisper.load_model('/home/aura/openai/model/whisper-base-hakka-au2a.pt')
+                        print("hakka model loaded.")
                     transcribe = model.transcribe(audio=new_file)
                     segments = transcribe['segments']
                     output_file=open('decode/'+path.split('watch?v=')[1]+'.srt','w',encoding='utf8')
@@ -53,7 +65,7 @@ def decode():
                         # output_file.write(str(segment['id']+1)+'\n'+'{:02d}:{:02d}:{:02d}'.format(starth, startm, starts)+',000 --> '+'{:02d}:{:02d}:{:02d}'.format(endh, endm, ends)+',000\n'+segment['text']+'\n\n')
                         output_file.write(str(start)+','+str(end)+','+segment['text']+'*')
                     output_file.close()
-                    print('success'+path)
+                    print('success '+path+'\n')
                 else:
                     print('audio too long')
             else:

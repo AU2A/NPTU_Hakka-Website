@@ -143,3 +143,24 @@ function handleFiles(event) {
   document.getElementById('downloadButton').disabled = false
 }
 document.getElementById('upload').addEventListener('change', handleFiles, false);
+
+
+
+const volumeMeterEl = document.getElementById('volumeMeter');
+window.onload = async () => {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+    const audioContext = new AudioContext();
+    const mediaStreamAudioSourceNode = audioContext.createMediaStreamSource(stream);
+    const analyserNode = audioContext.createAnalyser();
+    mediaStreamAudioSourceNode.connect(analyserNode);
+
+    const pcmData = new Float32Array(analyserNode.fftSize);
+    const onFrame = () => {
+        analyserNode.getFloatTimeDomainData(pcmData);
+        let sumSquares = 0.0;
+        for (const amplitude of pcmData) { sumSquares += amplitude*amplitude; }
+        volumeMeterEl.value = Math.sqrt(sumSquares / pcmData.length);
+        window.requestAnimationFrame(onFrame);
+    };
+    window.requestAnimationFrame(onFrame);
+};
