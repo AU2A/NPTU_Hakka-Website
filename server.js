@@ -97,11 +97,12 @@ app.post('/upload_files', upload.any('file'), (req, res) => {
 // })
 
 app.get('/uploadyt', (req, res) => {
-  tag=req.originalUrl.split('url=')[1]
+  tag=req.originalUrl.split('url=')[1].split('&model=')[0]
+  model=req.originalUrl.split('model=')[1]
   var temp=''
   try{
-    // console.log('echo https://www.youtube.com/watch?v='+tag+' >> aidecodeList.txt')
-      execSync('echo https://www.youtube.com/watch?v='+tag+' >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+    console.log('echo "https://www.youtube.com/watch?v='+tag+'///'+model+'" >> aidecodeList.txt')
+      execSync('echo "https://www.youtube.com/watch?v='+tag+'///'+model+'" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
       // if(tag.split('_')[0]=='ai'){
       //     temp = execSync('cat openai/'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
       // }else{

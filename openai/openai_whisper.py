@@ -28,31 +28,31 @@ def decode():
             path=now[0].split('\n')[0]
             if(path.split('://')[0]=='https'):
                 print(path)
-                yt = YouTube(path.split('_')[0])
+                yt = YouTube(path.split('///')[0])
                 if yt.length < 5400:
                     video = yt.streams.filter(only_audio=True).first()
                     out_file=video.download(output_path="upload/")
                     base, ext = os.path.splitext(out_file)
                     new_file = base+'.mp3'
                     os.rename(out_file, new_file)
-                    if(path.split('_')[1]=='0'):
+                    if(path.split('///')[1]=='0'):
                         model = whisper.load_model('tiny')
                         print("tiny model loaded.")
-                    elif(path.split('_')[1]=='1'):
+                    elif(path.split('///')[1]=='1'):
                         model = whisper.load_model('base')
                         print("base model loaded.")
-                    elif(path.split('_')[1]=='2'):
+                    elif(path.split('///')[1]=='2'):
                         model = whisper.load_model('small')
                         print("small model loaded.")
-                    elif(path.split('_')[1]=='3'):
+                    elif(path.split('///')[1]=='3'):
                         model = whisper.load_model('medium')
                         print("medium model loaded.")
-                    elif(path.split('_')[1]=='4'):
+                    elif(path.split('///')[1]=='4'):
                         model = whisper.load_model('/home/aura/openai/model/whisper-base-hakka-au2a.pt')
                         print("hakka model loaded.")
                     transcribe = model.transcribe(audio=new_file)
                     segments = transcribe['segments']
-                    output_file=open('decode/'+path.split('watch?v=')[1]+'.srt','w',encoding='utf8')
+                    output_file=open('decode/'+path.split('watch?v=')[1].split('///')[0]+'.srt','w',encoding='utf8')
                     # print(segments)
                     for segment in segments:
                         start = int(segment['start'])

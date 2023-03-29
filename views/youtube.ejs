@@ -23,6 +23,9 @@
         </select>
         <input style='font-size: 20px;' id='url'>
         <input type="button" style='font-size: 20px;' value="送出" onclick="reloadurl()">
+        <br>
+            <p style='text-align: center;font-size: 20px;'>說明：輸入影片的id即可，網址紅色的部分</p>
+            <p style='text-align: center;font-size: 20px;'>Ex: https://www.youtube.com/watch?v=<font color="red">mkggXE5e2yk</font></p>
     </div>
     <br>
     <div style='text-align: center;'>
@@ -82,7 +85,7 @@
         tagurl = ''
         lyric = ''
         player.loadVideoById(videoId = val, startSeconds = 0)
-        fetch('https://hakka.corelab.dev/uploadyt?url=' + val+'_'+document.getElementById('lang').value, {
+        fetch('https://hakka.corelab.dev/uploadyt?url=' +val+'&model='+document.getElementById('lang').value, {
             method: 'get',
         }).then(res => res.text()).then(res => {
             tagurl = res
