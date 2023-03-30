@@ -51,40 +51,40 @@ app.get('/youtube', (req, res) => {
 // })
 
 app.post('/upload_files', upload.any('file'), (req, res) => {
-  lang=req.originalUrl.split('?lang=')[1]
+  lang = req.originalUrl.split('?lang=')[1]
   var fileInfo = req.files[0]
-  if(lang<2){
-    if(lang==0){
-      newFileName='chinese_'
-    }else{
-      newFileName='hakka_'
+  if (lang < 2) {
+    if (lang == 0) {
+      newFileName = 'chinese_'
+    } else {
+      newFileName = 'hakka_'
     }
-    if(fileInfo.path=='upload/blob'){
-      newFileName='upload/'+newFileName+'record_'+Date.now()+'.wav'
-    }else{
-      newFileName='upload/'+newFileName+'upload_'+Date.now()+'.wav'
+    if (fileInfo.path == 'upload/blob') {
+      newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
+    } else {
+      newFileName = 'upload/' + newFileName + 'upload_' + Date.now() + '.wav'
       // fileInfo.path.split('.')[0]+'_'+Date.now()+'.'+fileInfo.path.split('.')[1]
     }
     console.log(newFileName)
-    execSync('mv ' + fileInfo.path + ' '+newFileName, { shell: 'bash', encoding: 'utf-8' })
-    execSync('sox '+newFileName+' -e signed -c 1 -r 16000 -b 16 '+newFileName.split('.wav')[0]+'.new.wav', { shell: 'bash', encoding: 'utf-8' })
-    execSync('mv '+newFileName.split('.wav')[0]+'.new.wav '+newFileName, { shell: 'bash', encoding: 'utf-8' })
+    execSync('mv ' + fileInfo.path + ' ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
+    execSync('sox ' + newFileName + ' -e signed -c 1 -r 16000 -b 16 ' + newFileName.split('.wav')[0] + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
+    execSync('mv ' + newFileName.split('.wav')[0] + '.new.wav ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
     execSync('echo \"' + newFileName + '\" >> decodeList.txt', { shell: 'bash', encoding: 'utf-8' })
     // execSync('sox upload/audio.wav -t raw -c 1 -b 16 -r 16000 -e signed-integer - | tee >(play -t raw -r 16000 -e signed-integer -b 16 -c 1 -q -) |pv -L 16000 -q | nc -N localhost 5050 > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
     // execSync('ffprobe upload/audio.wav 2>&1 | grep -A1 Duration: > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
     res.send(newFileName)
-  }else if(lang==2){
-    newFileName='ai_'
-    if(fileInfo.path=='upload/blob'){
-      newFileName='upload/'+newFileName+'record_'+Date.now()+'.wav'
-    }else{
-      newFileName='upload/'+newFileName+'upload_'+Date.now()+'.wav'
+  } else if (lang == 2) {
+    newFileName = 'ai_'
+    if (fileInfo.path == 'upload/blob') {
+      newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
+    } else {
+      newFileName = 'upload/' + newFileName + 'upload_' + Date.now() + '.wav'
       // fileInfo.path.split('.')[0]+'_'+Date.now()+'.'+fileInfo.path.split('.')[1]
     }
     console.log(newFileName)
-    execSync('mv ' + fileInfo.path + ' '+newFileName, { shell: 'bash', encoding: 'utf-8' })
-    execSync('sox '+newFileName+' -e signed -c 1 -r 16000 -b 16 '+newFileName.split('.wav')[0]+'.new.wav', { shell: 'bash', encoding: 'utf-8' })
-    execSync('mv '+newFileName.split('.wav')[0]+'.new.wav '+newFileName, { shell: 'bash', encoding: 'utf-8' })
+    execSync('mv ' + fileInfo.path + ' ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
+    execSync('sox ' + newFileName + ' -e signed -c 1 -r 16000 -b 16 ' + newFileName.split('.wav')[0] + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
+    execSync('mv ' + newFileName.split('.wav')[0] + '.new.wav ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
     execSync('echo \"' + newFileName + '\" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
     res.send(newFileName)
   }
@@ -97,21 +97,25 @@ app.post('/upload_files', upload.any('file'), (req, res) => {
 // })
 
 app.get('/uploadyt', (req, res) => {
-  tag=req.originalUrl.split('url=')[1].split('&model=')[0]
-  model=req.originalUrl.split('model=')[1]
-  var temp=''
-  try{
-    console.log('echo "https://www.youtube.com/watch?v='+tag+'///'+model+'" >> aidecodeList.txt')
-      execSync('echo "https://www.youtube.com/watch?v='+tag+'///'+model+'" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
-      // if(tag.split('_')[0]=='ai'){
-      //     temp = execSync('cat openai/'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
-      // }else{
-      //     temp = execSync('cat decode/'+tag+'.txt', { shell: 'bash', encoding: 'utf-8' })
-      // }
-  }catch{
-      temp=''
+  tag = req.originalUrl.split('url=')[1].split('&model=')[0]
+  model = req.originalUrl.split('model=')[1]
+  var temp = ''
+  try {
+    console.log('echo "https://www.youtube.com/watch?v=' + tag + '///' + model + '" >> aidecodeList.txt')
+    execSync('echo "https://www.youtube.com/watch?v=' + tag + '///' + model + '" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+    if (model == 4) {
+      console.log('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt')
+      execSync('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+    }
+    // if(tag.split('_')[0]=='ai'){
+    //     temp = execSync('cat openai/'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
+    // }else{
+    //     temp = execSync('cat decode/'+tag+'.txt', { shell: 'bash', encoding: 'utf-8' })
+    // }
+  } catch {
+    temp = ''
   }
-  res.send(tag)
+  res.send(tag + '!!!' + model)
 })
 
 // app.listen(port, () => {

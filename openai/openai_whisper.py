@@ -52,7 +52,8 @@ def decode():
                         print("hakka model loaded.")
                     transcribe = model.transcribe(audio=new_file)
                     segments = transcribe['segments']
-                    output_file=open('decode/'+path.split('watch?v=')[1].split('///')[0]+'.srt','w',encoding='utf8')
+                    print('decode/'+path.split('watch?v=')[1].split('///')[0]+'!!!'+path.split('///')[1]+'.srt')
+                    output_file=open('decode/'+path.split('watch?v=')[1].split('///')[0]+'!!!'+path.split('///')[1]+'.srt','w',encoding='utf8')
                     # print(segments)
                     for segment in segments:
                         start = int(segment['start'])
@@ -63,7 +64,7 @@ def decode():
                         endh, endm = divmod(endm, 60)
                         (start//3600)
                         # output_file.write(str(segment['id']+1)+'\n'+'{:02d}:{:02d}:{:02d}'.format(starth, startm, starts)+',000 --> '+'{:02d}:{:02d}:{:02d}'.format(endh, endm, ends)+',000\n'+segment['text']+'\n\n')
-                        output_file.write(str(start)+','+str(end)+','+segment['text']+'*')
+                        output_file.write(str(start)+'***'+str(end)+'***'+segment['text']+'*****')
                     output_file.close()
                     print('success '+path+'\n')
                 else:
