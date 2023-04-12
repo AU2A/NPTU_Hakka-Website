@@ -53,11 +53,13 @@ app.get('/youtube', (req, res) => {
 app.post('/upload_files', upload.any('file'), (req, res) => {
   lang = req.originalUrl.split('?lang=')[1]
   var fileInfo = req.files[0]
-  if (lang < 2) {
+  if (lang < 3) {
     if (lang == 0) {
       newFileName = 'chinese_'
-    } else {
+    } else if(lang==1) {
       newFileName = 'hakka_'
+    }else {
+      newFileName = 'chAndHa_'
     }
     if (fileInfo.path == 'upload/blob') {
       newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
@@ -73,7 +75,7 @@ app.post('/upload_files', upload.any('file'), (req, res) => {
     // execSync('sox upload/audio.wav -t raw -c 1 -b 16 -r 16000 -e signed-integer - | tee >(play -t raw -r 16000 -e signed-integer -b 16 -c 1 -q -) |pv -L 16000 -q | nc -N localhost 5050 > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
     // execSync('ffprobe upload/audio.wav 2>&1 | grep -A1 Duration: > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
     res.send(newFileName)
-  } else if (lang == 2) {
+  } else if (lang == 3) {
     newFileName = 'ai_'
     if (fileInfo.path == 'upload/blob') {
       newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'

@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;400;500&family=Zen+Dots&family=Noto+Sans+TC&display=swap');
+
+@keyframes up2down {
+    0% {
+        top: 0px;
+        opacity: 0;
+    }
+
+    100% {
+        top: 50px;
+        opacity: 1;
+    }
+}
+
+body {
+    font-family: 'Noto Sans TC', sans-serif;
+    background-image: url(image/background.jpg);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    cursor: default;
+}
+
+body::-webkit-scrollbar {
+    display: none;
+}
+
+.area {
+    animation-name: up2down;
+    animation-duration: 1s;
+    animation-iteration-count: 1;
+    align-items: stretch;
+    border: 3px solid white;
+    border-radius: 10px;
+    background-color: #424752;
+    color: white;
+    display: flex;
+    margin: auto;
+    position: relative;
+    top: 50px;
+    flex-direction: column;
+    height: 80%;
+    width: 80%;
+}
+
+.record-btn,.select-file-btn,.download-btn {
+    background-color: #575b65;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 12px;
+    height: 80px;
+    transition: transform .1s;
+    font-size: 40px;
+}
+.record-btn:hover,.select-file-btn:hover,.download-btn:hover{
+    transform: scale(1.2);
+    background-color: #171613;
+}

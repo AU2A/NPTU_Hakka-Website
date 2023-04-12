@@ -36,6 +36,9 @@ if (navigator.mediaDevices.getUserMedia) {
       if (stat === 'recording') {
         stat = 'Not recording'
         rec.stop()
+        document.querySelector('.select-file-btn').disabled=false
+        document.getElementById('downloadButton').style = 'opacity: 1'
+        document.querySelector('.select-file-btn').style = 'opacity: 1'
         recordBtn.textContent = '開始錄音'
         console.log('start recording')
         createAudioController(rec)
@@ -43,6 +46,9 @@ if (navigator.mediaDevices.getUserMedia) {
       } else {
         stat = 'recording'
         document.getElementById('recordTime').textContent=0
+        document.getElementById('volumeMeter').style="visibility:visible"
+        document.querySelector('.select-file-btn').disabled=true
+        document.querySelector('.select-file-btn').style = 'opacity: 0.3'
         startTime=new Date()
         rec.record()
         console.log('recording...')
@@ -97,6 +103,7 @@ function uploadAudio(bin) {
 const selectFileBtn = document.querySelector('.select-file-btn')
 const selectFileBtn2 = document.querySelector('.select-file-btn2')
 selectFileBtn.addEventListener("click", function () {
+  document.getElementById('volumeMeter').style="visibility:hidden"
   document.getElementById('upload').value=''
   document.getElementById('recordTime').textContent=''
   selectFileBtn2.click()
@@ -127,7 +134,7 @@ function refreshRecordTime() {
     }else{
       output=output+second
     }
-    document.getElementById('recordTime').textContent=output
+    document.getElementById('recordTime').textContent='錄音時間：'+output
   }
 }
 setInterval('refreshRecordTime()', 100);
@@ -141,6 +148,7 @@ function handleFiles(event) {
 
   document.getElementById('downloadBtn').href = url
   document.getElementById('downloadButton').disabled = false
+  document.getElementById('downloadButton').style = 'opacity: 1'
 }
 document.getElementById('upload').addEventListener('change', handleFiles, false);
 
@@ -163,4 +171,6 @@ window.onload = async () => {
         window.requestAnimationFrame(onFrame);
     };
     window.requestAnimationFrame(onFrame);
+    document.getElementById('downloadButton').disabled = true
+    document.getElementById('downloadButton').style = 'opacity: 0.3'
 };
