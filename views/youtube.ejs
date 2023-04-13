@@ -3,178 +3,186 @@
 
 <head>
     <title>Youtube decode</title>
+    <link rel=stylesheet type="text/css" href="files/style.css">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 </head>
 
-<body style='margin:0;padding:0;border: 0;'>
-    <div>
-
-        <div>
-            <p style='text-align: center;font-size: 30px;'>Youtube語音辨識</p>
+<body>
+    <div class="area">
+        <p style='text-align: center;font-size: 40px;margin: 10px;'>Youtube語音辨識</p>
+        <div style='text-align: center;margin: 10px;'>
+            <select style='font-size: 20px;text-align: center;' id='lang'>
+                <option value='0'>tiny</option>
+                <option value='1'>base</option>
+                <option value='2'>small</option>
+                <option value='3'>medium</option>
+                <option value='4'>base_hakka</option>
+            </select>
+            <input style='font-size: 20px;' id='url'>
+            <input type="button" style='font-size: 20px;' value="送出" onclick="reloadurl()">
+            <br>
+            <p style='text-align: center;font-size: 20px;'>說明：輸入影片的id即可，網址紅色的部分</p>
+            <p style='text-align: center;font-size: 20px;'>Ex: https://www.youtube.com/watch?v=<font color="red">
+                    mkggXE5e2yk</font>
+            </p>
+            <div style='text-align: center;'>
+                <div id="player"></div>
+            </div>
+            <p id='response' style='padding-left: 15%;text-align: left;font-size: 30px;'></p>
+            <p id='responsehakka' style='padding-left: 15%;text-align: left;font-size: 30px;'></p>
         </div>
     </div>
-    <div style='text-align: center;'>
-        <select style='font-size: 20px;' id='lang'>
-            <option value='0'>tiny</option>
-            <option value='1'>base</option>
-            <option value='2'>small</option>
-            <option value='3'>medium</option>
-            <option value='4'>base_hakka</option>
-        </select>
-        <input style='font-size: 20px;' id='url'>
-        <input type="button" style='font-size: 20px;' value="送出" onclick="reloadurl()">
-        <br>
-        <p style='text-align: center;font-size: 20px;'>說明：輸入影片的id即可，網址紅色的部分</p>
-        <p style='text-align: center;font-size: 20px;'>Ex: https://www.youtube.com/watch?v=<font color="red">mkggXE5e2yk
-            </font>
-        </p>
-    </div>
-    <br>
-    <div style='text-align: center;'>
-        <div id="player"></div>
-    </div>
-    <p id='response' style='padding-left: 15%;text-align: left;font-size: 30px;'></p>
-    <p id='responsehakka' style='padding-left: 15%;text-align: left;font-size: 30px;'></p>
-</body>
-<script>
-    var tag = document.createElement('script');
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    <script>
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-    // 3. This function creates an <iframe> (and YouTube player)
-    //    after the API code downloads.
-    var player;
-    function onYouTubeIframeAPIReady() {
-        player = new YT.Player('player', {
-            height: '390',
-            width: '640',
-            videoId: '',
-            playerVars: {
-                'playsinline': 1
-            },
-            events: {
-                'onReady': onPlayerReady,
-                'onStateChange': onPlayerStateChange
-            }
-        });
-    }
-
-    // 4. The API will call this function when the video player is ready.
-    function onPlayerReady(event) {
-        // event.target.playVideo();
-    }
-
-    // 5. The API calls this function when the player's state changes.
-    //    The function indicates that when playing a video (state=1),
-    //    the player should play for six seconds and then stop.
-    var done = false;
-    function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.PLAYING && !done) {
-            // setTimeout(stopVideo, 6000);
-            done = true;
+        // 3. This function creates an <iframe> (and YouTube player)
+        //    after the API code downloads.
+        var player;
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('player', {
+                height: '360',
+                width: '640',
+                videoId: '',
+                playerVars: {
+                    'playsinline': 1
+                },
+                events: {
+                    'onError': onError,
+                    'onReady': onPlayerReady,
+                    'onStateChange': onPlayerStateChange
+                }
+            });
         }
-    }
 
-    function stopVideo() {
-        player.stopVideo();
-    }
-    var tagurl = ''
-    var lyric = ''
-    var hakka = false
-    var lyric_hakka = ''
-    var now_lang=''
+        // 4. The API will call this function when the video player is ready.
+        function onPlayerReady(event) {
+            // event.target.playVideo();
+        }
 
-    function reloadurl() {
-        var val = document.getElementById("url").value;
-        // console.log(val)
-        tagurl = ''
-        lyric = ''
-        player.loadVideoById(videoId = val, startSeconds = 0)
-        fetch('https://hakka.corelab.dev/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
-            method: 'get',
-        }).then(res => res.text()).then(res => {
-            if(document.getElementById('lang').value == 0) {
-                now_lang='tiny: '
-            }
-            else if(document.getElementById('lang').value == 1) {
-                now_lang='base: '
-            }
-            else if(document.getElementById('lang').value == 2) {
-                now_lang='small: '
-            }
-            else if(document.getElementById('lang').value == 3) {
-                now_lang='medium: '
-            }
-            else if(document.getElementById('lang').value == 4) {
-                now_lang='hakka: '
-            }
-            if (document.getElementById('lang').value == 4) {
-                hakka = true
-            }else{
-                hakka=false
-            }
-            tagurl = res
-            console.log(tagurl);
-        })
-    }
+        var errorStatus = false;
+        function onError(event) {
+            console.log('Error')
+            errorStatus = true;
+            alert('影片網址有誤，請檢查')
+        }
 
-    function autoRefresh() {
-        if (tagurl != '') {
-            console.log(player.playerInfo.currentTime);
-            fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl, {
-                method: 'get',
-            }).then(res => res.text()).then(res => {
-                lyric = res.split('*****');
-            })
-            if (hakka == true) {
-                fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl.split('!!!')[0] + '!!!1', {
+        // 5. The API calls this function when the player's state changes.
+        //    The function indicates that when playing a video (state=1),
+        //    the player should play for six seconds and then stop.
+        var done = false;
+        function onPlayerStateChange(event) {
+            if (event.data == YT.PlayerState.PLAYING && !done) {
+                // setTimeout(stopVideo, 6000);
+                done = true;
+            }
+        }
+
+        function stopVideo() {
+            player.stopVideo();
+        }
+        var tagurl = ''
+        var lyric = ''
+        var hakka = false
+        var lyric_hakka = ''
+        var now_lang = ''
+
+        function reloadurl() {
+            var val = document.getElementById("url").value;
+            errorStatus = false
+            // console.log(val)
+            tagurl = ''
+            lyric = ''
+            player.loadVideoById(videoId = val, startSeconds = 0)
+            if (!errorStatus) {
+                fetch('https://hakka.corelab.dev/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
                     method: 'get',
                 }).then(res => res.text()).then(res => {
-                    lyric_hakka = res.split('*****');
+                    if (document.getElementById('lang').value == 0) {
+                        now_lang = 'tiny: '
+                    }
+                    else if (document.getElementById('lang').value == 1) {
+                        now_lang = 'base: '
+                    }
+                    else if (document.getElementById('lang').value == 2) {
+                        now_lang = 'small: '
+                    }
+                    else if (document.getElementById('lang').value == 3) {
+                        now_lang = 'medium: '
+                    }
+                    else if (document.getElementById('lang').value == 4) {
+                        now_lang = 'hakka: '
+                    }
+                    if (document.getElementById('lang').value == 4) {
+                        hakka = true
+                    } else {
+                        hakka = false
+                    }
+                    tagurl = res
+                    console.log(tagurl);
                 })
             }
-        }
-    }
-    setInterval('autoRefresh()', 1000);
 
-    function refreshlyric() {
-        if (lyric[0] != '請稍後...') {
-            document.getElementById('responsehakka').innerHTML = now_lang
-            for (i = 0; i < lyric.length; i++) {
-                now = lyric[i].split('***')
-                curtime = player.playerInfo.currentTime
-                if (now[0] < curtime && curtime < now[1]) {
-                    document.getElementById('response').innerHTML = now_lang+now[2]
-                    break;
+        }
+
+        function autoRefresh() {
+            if (!errorStatus&&tagurl != '') {
+                console.log(player.playerInfo.currentTime);
+                fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl, {
+                    method: 'get',
+                }).then(res => res.text()).then(res => {
+                    lyric = res.split('*****');
+                })
+                if (hakka == true) {
+                    fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl.split('!!!')[0] + '!!!1', {
+                        method: 'get',
+                    }).then(res => res.text()).then(res => {
+                        lyric_hakka = res.split('*****');
+                    })
                 }
-                // else{
-                //     document.getElementById('response').innerHTML=''
-                // }
             }
-            if (hakka == true) {
-                document.getElementById('responsehakka').innerHTML = 'base: '
-                for (i = 0; i < lyric_hakka.length; i++) {
-                    now = lyric_hakka[i].split('***')
+        }
+        setInterval('autoRefresh()', 1000);
+
+        function refreshlyric() {
+            if (lyric[0] != '請稍後...') {
+                document.getElementById('responsehakka').innerHTML = now_lang
+                for (i = 0; i < lyric.length; i++) {
+                    now = lyric[i].split('***')
                     curtime = player.playerInfo.currentTime
                     if (now[0] < curtime && curtime < now[1]) {
-                        document.getElementById('responsehakka').innerHTML = 'base: '+now[2]
+                        document.getElementById('response').innerHTML = now_lang + now[2]
                         break;
                     }
                     // else{
                     //     document.getElementById('response').innerHTML=''
                     // }
                 }
+                if (hakka == true) {
+                    document.getElementById('responsehakka').innerHTML = 'base: '
+                    for (i = 0; i < lyric_hakka.length; i++) {
+                        now = lyric_hakka[i].split('***')
+                        curtime = player.playerInfo.currentTime
+                        if (now[0] < curtime && curtime < now[1]) {
+                            document.getElementById('responsehakka').innerHTML = 'base: ' + now[2]
+                            break;
+                        }
+                        // else{
+                        //     document.getElementById('response').innerHTML=''
+                        // }
+                    }
+                }
+                else {
+                    document.getElementById('responsehakka').innerHTML = ''
+                }
             }
             else {
-                document.getElementById('responsehakka').innerHTML = ''
+                document.getElementById('response').innerHTML = '請稍後...'
             }
         }
-        else {
-            document.getElementById('response').innerHTML = '請稍後...'
-        }
-    }
-    setInterval('refreshlyric()', 500);
-</script>
+        setInterval('refreshlyric()', 500);
+    </script>
 
 </html>
