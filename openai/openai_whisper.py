@@ -98,7 +98,7 @@ def decode():
 def cleanFile():
     delayTime = 86400
     while(True):
-        time.sleep(10)
+        time.sleep(delayTime)
         print('clean file')
         for i in os.listdir(fileRootDir+'/openai/upload'):
             if(datetime.now().timestamp()-os.path.getctime(fileRootDir+'/openai/upload/'+i)>delayTime):
