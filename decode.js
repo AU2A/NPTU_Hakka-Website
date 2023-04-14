@@ -32,7 +32,7 @@ app.get('/decode', (req, res) => {
     var temp=''
     try{
         if(tag.split('_')[0]=='ai'){
-            temp = execSync('cat openai/'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
+            temp = execSync('cat openai/decode'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
         }else{
             temp = execSync('cat decode/'+tag+'.txt', { shell: 'bash', encoding: 'utf-8' })
         }
