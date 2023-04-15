@@ -29,6 +29,16 @@ body::-webkit-scrollbar {
     display: none;
 }
 
+.top {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    /* padding-left: 10%;
+    padding-right: 10%; */
+    /* background-color: #424752; */
+}
+
 .area {
     animation-name: up2down;
     animation-duration: 1s;
@@ -41,10 +51,31 @@ body::-webkit-scrollbar {
     display: flex;
     margin: auto;
     position: relative;
-    top: 50px;
+    /* top: 50px; */
     flex-direction: column;
     height: 80%;
     width: 80%;
+}
+
+.btn {
+    background-color: #575b65;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin: 5px;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 12px;
+    height: 50px;
+    transition: transform .1s;
+    font-size: 30px;
+}
+
+.btn:hover {
+    transform: scale(1.2);
+    background-color: #171613;
 }
 
 .record-btn,
