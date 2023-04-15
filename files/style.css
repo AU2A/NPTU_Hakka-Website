@@ -32,11 +32,15 @@ body::-webkit-scrollbar {
 .top {
     width: 100%;
     display: flex;
-    flex-direction: row;
     justify-content: space-evenly;
     /* padding-left: 10%;
     padding-right: 10%; */
     /* background-color: #424752; */
+}
+
+.top-left {
+    display: flex;
+    justify-content: space-evenly;
 }
 
 .area {
@@ -65,12 +69,11 @@ body::-webkit-scrollbar {
     text-decoration: none;
     display: inline-block;
     margin: 5px;
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
     border-radius: 12px;
-    height: 50px;
+    /* height: 50px; */
     transition: transform .1s;
-    font-size: 30px;
 }
 
 .btn:hover {
@@ -132,3 +135,57 @@ body::-webkit-scrollbar {
     font-size: 20px;
     text-align: center;
 }
+
+
+.yt-player{
+    width: 100%;
+    max-width: 640px;
+}
+
+@media(min-width:0px) {
+    .top {
+        flex-direction: column;
+    }
+
+    .logo-image {
+        width: 100%;
+    }
+
+    .btn {
+        font-size: 15px;
+    }
+
+    .audio-player{
+        width: 100%;
+    }
+    .titletext{
+        font-size: 30px;
+    }
+}
+
+@media(min-width:700px) {
+    .top {
+        flex-direction: row;
+    }
+
+    .logo-image {
+        width: 400px;
+    }
+
+    .btn {
+        font-size: 30px;
+    }
+    
+    .audio-player{
+        width: 400px;
+    }
+    .titletext{
+        font-size: 40px;
+    }
+}
+/* 
+@media(min-width:830px) {
+    .yt-player{
+        width: 640px;
+    }
+} */
