@@ -163,7 +163,7 @@ body::-webkit-scrollbar {
     }
 }
 
-@media(min-width:700px) {
+@media(min-width:800px) {
     .top {
         flex-direction: row;
     }

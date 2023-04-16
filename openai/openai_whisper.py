@@ -73,7 +73,7 @@ def decode():
                     print('audio too long')
             else:
                 print('../'+path)
-                os.system('whisper ../'+path+' --language zh --model medium > '+path.split('/')[1].split('.')[0]+'_time.txt')
+                os.system('whisper ../'+path+' --language zh --model base > '+path.split('/')[1].split('.')[0]+'_time.txt')
                 time.sleep(0.1)
                 file_name=path.split('/')[1].split('.')[0]
                 output_file_name=path.split('/')[1].split('.')[0]
