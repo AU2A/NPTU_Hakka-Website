@@ -3,5 +3,6 @@
 upload/*
 decode/*
 node_modules/*
-openai/*
+openai/decode/*
+openai/upload/*
 upload/*

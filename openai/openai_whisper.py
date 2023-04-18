@@ -31,13 +31,14 @@ def decode():
             if(path.split('://')[0]=='https'):
                 print(path)
                 yt = YouTube(path.split('///')[0])
+                time.sleep(1)
                 if yt.length < 54000:
                     video = yt.streams.filter(only_audio=True).first()
                     out_file=video.download(output_path="upload/")
                     base, ext = os.path.splitext(out_file)
                     new_file = base+'.mp3'
                     os.rename(out_file, new_file)
-                    if(path.split('///')[1]=='0'):
+                    if  (path.split('///')[1]=='0'):
                         model = whisper.load_model('tiny')
                         print("tiny model loaded.")
                     elif(path.split('///')[1]=='1'):
@@ -50,7 +51,7 @@ def decode():
                         model = whisper.load_model('medium')
                         print("medium model loaded.")
                     elif(path.split('///')[1]=='4'):
-                        model = whisper.load_model(fileRootDir+'/model/whisper-base-hakka-20230306.pt')
+                        model = whisper.load_model('/home/aura/whisper_hakka/model/whisper-base-hakka-20230306.pt')
                         print("hakka model loaded.")
                     transcribe = model.transcribe(audio=new_file)
                     segments = transcribe['segments']
