@@ -11,10 +11,10 @@ fileRootDir='/home/aura/hakka_web'
 
 def decode():
     while True:
-        while os.path.exists(fileRootDir+"/openai/lock"):
+        while os.path.exists(fileRootDir+"/openai_lock"):
             time.sleep(0.1)
         try:
-            lock = open(fileRootDir+"/openai/lock", "x")
+            lock = open(fileRootDir+"/openai_lock", "x")
             lock.close
         except:
             time.sleep(0.1)
@@ -26,13 +26,13 @@ def decode():
             for i in range(1,len(now)):
                 new_file.write(now[i])
             new_file.close()
-            os.remove(fileRootDir+"/openai/lock")
+            os.remove(fileRootDir+"/openai_lock")
             path=now[0].split('\n')[0]
             if(path.split('://')[0]=='https'):
                 print(path)
                 yt = YouTube(path.split('///')[0])
                 time.sleep(1)
-                if yt.length < 54000:
+                if True: #yt.length < 54000:
                     video = yt.streams.filter(only_audio=True).first()
                     out_file=video.download(output_path="upload/")
                     base, ext = os.path.splitext(out_file)
@@ -92,8 +92,8 @@ def decode():
                 os.remove(fileRootDir+'/openai/'+file_name+'.txt')
                 os.remove(fileRootDir+'/openai/'+file_name+'.vtt')
             
-        if os.path.exists(fileRootDir+"/openai/lock"):
-            os.remove(fileRootDir+"/openai/lock")
+        if os.path.exists(fileRootDir+"/openai_lock"):
+            os.remove(fileRootDir+"/openai_lock")
         time.sleep(1)
         
 def cleanFile():
@@ -108,20 +108,14 @@ def cleanFile():
                 os.remove(fileRootDir+'/openai/upload/'+i)
         for i in os.listdir(fileRootDir+'/openai/decode'):
             if(datetime.now().timestamp()-os.path.getctime(fileRootDir+'/openai/decode/'+i)>delayTime):
-                # print(i)
-                # print(datetime.now().timestamp()-os.path.getctime('openai/upload/'+i))
                 os.remove(fileRootDir+'/openai/decode/'+i)
 
         for i in os.listdir(fileRootDir+'/upload'):
             if(datetime.now().timestamp()-os.path.getctime(fileRootDir+'/upload/'+i)>delayTime):
-                # print(i)
-                # print(datetime.now().timestamp()-os.path.getctime('openai/upload/'+i))
                 os.remove(fileRootDir+'/upload/'+i)
 
         for i in os.listdir(fileRootDir+'/decode'):
             if(datetime.now().timestamp()-os.path.getctime(fileRootDir+'/decode/'+i)>delayTime):
-                # print(i)
-                # print(datetime.now().timestamp()-os.path.getctime('openai/upload/'+i))
                 os.remove(fileRootDir+'/decode/'+i)
     
 
