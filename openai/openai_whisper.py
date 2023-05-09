@@ -32,7 +32,7 @@ def decode():
                 print(path)
                 yt = YouTube(path.split('///')[0])
                 time.sleep(1)
-                if True: #yt.length < 54000:
+                if yt.length < 54000:
                     video = yt.streams.filter(only_audio=True).first()
                     out_file=video.download(output_path="upload/")
                     base, ext = os.path.splitext(out_file)
@@ -97,7 +97,7 @@ def decode():
         time.sleep(1)
         
 def cleanFile():
-    delayTime = 86400
+    delayTime = 86400*7
     while(True):
         time.sleep(delayTime)
         print('clean file')

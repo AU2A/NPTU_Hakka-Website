@@ -32,6 +32,14 @@
                 <option value='3'>AI</option>
             </select>
             <br>
+            <a class='text'>範例音檔</a>
+            <br>
+            <select class='selectbox' id='demo' onchange="useDemo()">
+                <option value='0'>北四縣男聲</option>
+                <option value='1'>北四縣女聲</option>
+                <option value='2'>南四縣</option>
+            </select>
+            <br>
             <p class='text'>請選擇錄音或上傳音檔</p>
             <meter id='volumeMeter' high='0.25' max='1' value='0' style='visibility:hidden'></meter>
             <a id='recordTime'></a>
@@ -47,6 +55,7 @@
             <audio class='audio-player' id='audio' controls >
                 <source src='' id='src' />
             </audio>
+            <p id='demoResponse' class='text' hidden>　</p>
             <p id='response' class='text'>　</p>
             <div id='main'></div>
         </div>

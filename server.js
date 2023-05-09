@@ -10,11 +10,14 @@ var date = new Date();
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
+// app.set('demo', './demo')
 
 app.use(express.static('static'));
 app.use(express.static(__dirname, { dotfiles: 'allow' }));
 
 app.use(express.static(__dirname + '/files'));
+
+// app.use(express.static(__dirname + '/demo'));
 
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
@@ -42,9 +45,9 @@ app.get('/', (req, res) => {
   })
   res.render('index')
 })
-app.get('/youtube', (req, res) => {
-  res.render('youtube')
-})
+// app.get('/youtube', (req, res) => {
+//   res.render('youtube')
+// })
 app.get('/recorder', (req, res) => {
   res.render('recorder')
 })
@@ -56,43 +59,49 @@ app.get('/recorder', (req, res) => {
 app.post('/upload_files', upload.any('file'), (req, res) => {
   lang = req.originalUrl.split('?lang=')[1]
   var fileInfo = req.files[0]
-  if (lang < 3) {
-    if (lang == 0) {
-      newFileName = 'chinese_'
-    } else if(lang==1) {
-      newFileName = 'hakka_'
-    }else {
-      newFileName = 'chAndHa_'
+  if (fileInfo.path.endsWith('.wav')||fileInfo.path == 'upload/blob'){
+    if (lang < 3) {
+      if (lang == 0) {
+        newFileName = 'chinese_'
+      } else if(lang==1) {
+        newFileName = 'hakka_'
+      }else {
+        newFileName = 'chAndHa_'
+      }
+      if (fileInfo.path == 'upload/blob') {
+        newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
+      } else {
+        newFileName = 'upload/' + newFileName + 'upload_' + Date.now() + '.wav'
+        // fileInfo.path.split('.')[0]+'_'+Date.now()+'.'+fileInfo.path.split('.')[1]
+      }
+      console.log(fileInfo.path)
+  
+      execSync('mv ' + fileInfo.path + ' ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
+      execSync('sox ' + newFileName + ' -e signed -c 1 -r 16000 -b 16 ' + newFileName.split('.wav')[0] + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
+      execSync('mv ' + newFileName.split('.wav')[0] + '.new.wav ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
+      execSync('echo \"' + newFileName + '\" >> decodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+      // execSync('sox upload/audio.wav -t raw -c 1 -b 16 -r 16000 -e signed-integer - | tee >(play -t raw -r 16000 -e signed-integer -b 16 -c 1 -q -) |pv -L 16000 -q | nc -N localhost 5050 > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
+      // execSync('ffprobe upload/audio.wav 2>&1 | grep -A1 Duration: > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
+      res.send(newFileName)
+    } else if (lang == 3) {
+      newFileName = 'ai_'
+      if (fileInfo.path == 'upload/blob') {
+        newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
+      } else {
+        newFileName = 'upload/' + newFileName + 'upload_' + Date.now() + '.wav'
+        // fileInfo.path.split('.')[0]+'_'+Date.now()+'.'+fileInfo.path.split('.')[1]
+      }
+      console.log(newFileName)
+      execSync('mv ' + fileInfo.path + ' ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
+      execSync('sox ' + newFileName + ' -e signed -c 1 -r 16000 -b 16 ' + newFileName.split('.wav')[0] + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
+      execSync('mv ' + newFileName.split('.wav')[0] + '.new.wav ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
+      execSync('echo \"' + newFileName + '\" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+      res.send(newFileName)
     }
-    if (fileInfo.path == 'upload/blob') {
-      newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
-    } else {
-      newFileName = 'upload/' + newFileName + 'upload_' + Date.now() + '.wav'
-      // fileInfo.path.split('.')[0]+'_'+Date.now()+'.'+fileInfo.path.split('.')[1]
-    }
-    console.log(newFileName)
-    execSync('mv ' + fileInfo.path + ' ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
-    execSync('sox ' + newFileName + ' -e signed -c 1 -r 16000 -b 16 ' + newFileName.split('.wav')[0] + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
-    execSync('mv ' + newFileName.split('.wav')[0] + '.new.wav ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
-    execSync('echo \"' + newFileName + '\" >> decodeList.txt', { shell: 'bash', encoding: 'utf-8' })
-    // execSync('sox upload/audio.wav -t raw -c 1 -b 16 -r 16000 -e signed-integer - | tee >(play -t raw -r 16000 -e signed-integer -b 16 -c 1 -q -) |pv -L 16000 -q | nc -N localhost 5050 > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
-    // execSync('ffprobe upload/audio.wav 2>&1 | grep -A1 Duration: > decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
-    res.send(newFileName)
-  } else if (lang == 3) {
-    newFileName = 'ai_'
-    if (fileInfo.path == 'upload/blob') {
-      newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
-    } else {
-      newFileName = 'upload/' + newFileName + 'upload_' + Date.now() + '.wav'
-      // fileInfo.path.split('.')[0]+'_'+Date.now()+'.'+fileInfo.path.split('.')[1]
-    }
-    console.log(newFileName)
-    execSync('mv ' + fileInfo.path + ' ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
-    execSync('sox ' + newFileName + ' -e signed -c 1 -r 16000 -b 16 ' + newFileName.split('.wav')[0] + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
-    execSync('mv ' + newFileName.split('.wav')[0] + '.new.wav ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
-    execSync('echo \"' + newFileName + '\" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
-    res.send(newFileName)
+  }else{
+    res.send("wrongFileName")
   }
+  
 })
 
 // app.get('/decode', (req, res) => {
@@ -121,6 +130,29 @@ app.get('/uploadyt', (req, res) => {
     temp = ''
   }
   res.send(tag + '!!!' + model)
+})
+
+app.get('/use_demo', (req, res) => {
+  tag = req.originalUrl.split('id=')[1]
+  if(tag=='0'){
+    orfileName='hakka_test1'
+    fileName='hakka_test1_'+Date.now()
+  }
+  else if(tag=='1'){
+    orfileName='hakka_test2'
+    fileName='hakka_test2_'+Date.now()
+  }
+  else if(tag=='2'){
+    orfileName='hakka_test3'
+    fileName='hakka_test3_'+Date.now()
+  }
+
+  execSync('cp demo/' + orfileName + '.wav upload/' + fileName + '.wav', { shell: 'bash', encoding: 'utf-8' })
+  execSync('sox upload/' + fileName + '.wav -e signed -c 1 -r 16000 -b 16 upload/' + fileName + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
+  execSync('mv upload/' + fileName + '.new.wav upload/' + fileName+'.wav', { shell: 'bash', encoding: 'utf-8' })
+  execSync('echo \"upload/' + fileName + '.wav\" >> decodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+
+  res.send(fileName)
 })
 
 // app.listen(port, () => {

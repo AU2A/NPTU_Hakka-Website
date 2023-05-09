@@ -39,6 +39,7 @@ if (navigator.mediaDevices.getUserMedia) {
         document.querySelector('.select-file-btn').disabled=false
         document.getElementById('downloadButton').style = 'opacity: 1'
         document.querySelector('.select-file-btn').style = 'opacity: 1'
+        document.getElementById('demoResponse').hidden = true
         recordBtn.textContent = '開始錄音'
         console.log('start recording')
         createAudioController(rec)
@@ -81,6 +82,7 @@ if (navigator.mediaDevices.getUserMedia) {
 const $input = document.querySelector('#upload');
 $input.addEventListener('change', event => {
   uploadAudio(event.target.files[0])
+  // console.log(event.target.files[0])
 })
 
 //上傳音檔
@@ -94,9 +96,40 @@ function uploadAudio(bin) {
       method: 'post',
       body: data
     }).then(res => res.text()).then(res => {
-      tag=res.split('upload/')[1]
+      if(res!='wrongFileName'){
+        tag=res.split('upload/')[1]
+      }else{
+        tag='wrongFileName'
+      }
     })
   }
+}
+
+function useDemo() {
+  // console.log(document.getElementById('demo').value);
+  fetch('/use_demo?id='+document.getElementById('demo').value, {
+    method: 'get',
+  }).then(res => res.text()).then(res => {
+    id=res.split('_')[0]+'_'+res.split('_')[1]
+    tag=res+'.wav'
+    // console.log(res)
+    var url ='https://hakka.corelab.dev/demo/'+id+'.wav'
+    $('#src').attr('src', url);
+    document.getElementById('audio').load();
+    document.getElementById('downloadBtn').href = url
+    document.getElementById('downloadButton').disabled = false
+    document.getElementById('downloadButton').style = 'opacity: 1'
+    
+
+    fetch('/demo/'+id+'.txt', {
+      method: 'get',
+    }).then(res => res.text()).then(res => {
+      // console.log(res)
+      document.getElementById('demoResponse').innerHTML = res;
+      document.getElementById('demoResponse').hidden = false;
+    })
+
+  })
 }
 
 //按鈕取代
@@ -111,7 +144,10 @@ selectFileBtn.addEventListener("click", function () {
 
 //刷新解碼結果
 function refreshDecode() {
-  if(tag!=''){
+  if(tag=='wrongFileName'){
+    document.getElementById('response').innerHTML = '請上傳副檔名為.wav的檔案';
+  }
+  else if(tag!=''){
     fetch('https://hakka.corelab.dev:5002/decode?tag='+tag, {
       method: 'get',
     }).then(res => res.text()).then(res => {
@@ -143,12 +179,13 @@ setInterval('refreshRecordTime()', 100);
 function handleFiles(event) {
   var files = event.target.files;
   var url = URL.createObjectURL(files[0])
+  console.log(files[0])
   $('#src').attr('src', url);
   document.getElementById('audio').load();
-
   document.getElementById('downloadBtn').href = url
   document.getElementById('downloadButton').disabled = false
   document.getElementById('downloadButton').style = 'opacity: 1'
+  document.getElementById('demoResponse').hidden = true
 }
 document.getElementById('upload').addEventListener('change', handleFiles, false);
 
