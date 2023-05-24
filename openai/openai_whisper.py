@@ -11,23 +11,36 @@ fileRootDir='/home/aura/hakka_web'
 
 def decode():
     while True:
-        while os.path.exists(fileRootDir+"/openai_lock"):
-            time.sleep(0.1)
-        try:
-            lock = open(fileRootDir+"/openai_lock", "x")
-            lock.close
-        except:
-            time.sleep(0.1)
         f = open(fileRootDir+'/aidecodeList.txt', 'r')
-        now=f.readlines()
+        fileCnt=f.readlines()
         f.close()
-        if len(now)>0:
+        if len(fileCnt)>0:
+            
+            while os.path.exists(fileRootDir+"/openai_lock"):
+                time.sleep(0.1)
+            
+            lock = open(fileRootDir+"/openai_lock", "x")
+            time.sleep(0.1)
+            lock.close()
+            
+            f = open(fileRootDir+'/aidecodeList.txt', 'r')
+            now=f.readlines()
+            f.close()
+                
             new_file = open(fileRootDir+"/aidecodeList.txt", "w")
             for i in range(1,len(now)):
                 new_file.write(now[i])
             new_file.close()
-            os.remove(fileRootDir+"/openai_lock")
-            path=now[0].split('\n')[0]
+            
+            if os.path.exists(fileRootDir+"/openai_lock"):
+                os.remove(fileRootDir+"/openai_lock")
+
+            path=""
+            try:
+                path=now[0].split('\n')[0]
+            except:
+                time.sleep(0.1)
+
             if(path.split('://')[0]=='https'):
                 print(path)
                 yt = YouTube(path.split('///')[0])
@@ -37,7 +50,8 @@ def decode():
                     out_file=video.download(output_path="upload/")
                     base, ext = os.path.splitext(out_file)
                     new_file = base+'.mp3'
-                    os.rename(out_file, new_file)
+                    if os.path.exists(out_file):
+                        os.rename(out_file, new_file)
                     if  (path.split('///')[1]=='0'):
                         model = whisper.load_model('tiny')
                         print("tiny model loaded.")
@@ -72,7 +86,7 @@ def decode():
                     print('success '+path+'\n')
                 else:
                     print('audio too long')
-            else:
+            elif path!="":
                 print('../'+path)
                 os.system('whisper ../'+path+' --language zh --model base > '+path.split('/')[1].split('.')[0]+'_time.txt')
                 time.sleep(0.1)
@@ -92,8 +106,12 @@ def decode():
                 os.remove(fileRootDir+'/openai/'+file_name+'.txt')
                 os.remove(fileRootDir+'/openai/'+file_name+'.vtt')
             
-        if os.path.exists(fileRootDir+"/openai_lock"):
-            os.remove(fileRootDir+"/openai_lock")
+        # time.sleep(0.1)
+        # while os.path.exists(fileRootDir+"/openai_lock"):
+        #     try:
+        #         os.remove(fileRootDir+"/openai_lock")
+        #     except:
+        #         time.sleep(0.1)
         time.sleep(1)
         
 def cleanFile():

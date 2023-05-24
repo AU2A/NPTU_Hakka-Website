@@ -45,9 +45,9 @@ app.get('/', (req, res) => {
   })
   res.render('index')
 })
-// app.get('/youtube', (req, res) => {
-//   res.render('youtube')
-// })
+app.get('/youtube', (req, res) => {
+  res.render('youtube')
+})
 app.get('/recorder', (req, res) => {
   res.render('recorder')
 })
