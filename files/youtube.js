@@ -3,6 +3,7 @@ tag.src = 'https://www.youtube.com/iframe_api';
 var firstScriptTag = document.getElementsByTagName('script')[0];
 firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+
 // 3. This function creates an <iframe> (and YouTube player)
 //    after the API code downloads.
 var player;
@@ -48,14 +49,17 @@ function onPlayerStateChange(event) {
 function stopVideo() {
     player.stopVideo();
 }
+
 var tagurl = ''
 var lyric = ''
 var hakka = false
 var lyric_hakka = ''
 var now_lang = ''
+var val =''
 
 function reloadurl() {
-    var val = document.getElementById('url').value;
+    val = document.getElementById('url').value;
+    document.getElementById('player').style.visibility = 'hidden';
     errorStatus = false
     // console.log(val)
     tagurl = ''
@@ -87,6 +91,7 @@ function reloadurl() {
             }
             tagurl = res
             console.log(tagurl);
+            player.stopVideo();
         })
     }
 
@@ -111,9 +116,18 @@ function autoRefresh() {
 }
 setInterval('autoRefresh()', 1000);
 
+var cnt=0
 function refreshlyric() {
-    if (lyric[0] != '請稍後...') {
-        document.getElementById('responsehakka').innerHTML = now_lang
+    if(val==""){
+        document.getElementById('response').style.visibility = 'hidden';
+    }
+    else if (lyric[0] != '請稍後...' &&player.playerInfo.currentTime==0) {
+        document.getElementById('response').style.visibility = 'visible';
+        document.getElementById('player').style.visibility = 'visible';
+        document.getElementById('response').innerHTML = "辨識完成，請播放"
+    }
+    else if (lyric[0] != '請稍後...') {
+        document.getElementById('player').style.visibility = 'visible';
         for (i = 0; i < lyric.length; i++) {
             now = lyric[i].split('***')
             curtime = player.playerInfo.currentTime
@@ -126,12 +140,12 @@ function refreshlyric() {
             // }
         }
         if (hakka == true) {
-            document.getElementById('responsehakka').innerHTML = 'base: '
+            document.getElementById('response').innerHTML += '<br> base: '
             for (i = 0; i < lyric_hakka.length; i++) {
                 now = lyric_hakka[i].split('***')
                 curtime = player.playerInfo.currentTime
                 if (now[0] < curtime && curtime < now[1]) {
-                    document.getElementById('responsehakka').innerHTML = 'base: ' + now[2]
+                    document.getElementById('response').innerHTML += now[2]
                     break;
                 }
                 // else{
@@ -144,7 +158,14 @@ function refreshlyric() {
         }
     }
     else {
-        document.getElementById('response').innerHTML = '請稍後...'
+        player.stopVideo();
+        document.getElementById('player').style.visibility = 'hidden';
+        cnt=(cnt+1)%6;
+        var temp = "請稍後"
+        for(i=0;i<cnt;i++){
+            temp+="."
+        }
+        document.getElementById('response').innerHTML = temp
     }
 }
 setInterval('refreshlyric()', 500);

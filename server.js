@@ -117,10 +117,10 @@ app.get('/uploadyt', (req, res) => {
   try {
     console.log('echo "https://www.youtube.com/watch?v=' + tag + '///' + model + '" >> aidecodeList.txt')
     execSync('echo "https://www.youtube.com/watch?v=' + tag + '///' + model + '" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
-    if (model == 4) {
-      console.log('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt')
-      execSync('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
-    }
+    // if (model == 4) {
+    //   console.log('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt')
+    //   execSync('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+    // }
     // if(tag.split('_')[0]=='ai'){
     //     temp = execSync('cat openai/'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
     // }else{

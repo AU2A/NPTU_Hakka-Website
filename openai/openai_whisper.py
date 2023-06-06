@@ -42,36 +42,49 @@ def decode():
                 time.sleep(0.1)
 
             if(path.split('://')[0]=='https'):
-                print(path)
-                yt = YouTube(path.split('///')[0])
-                time.sleep(1)
-                if yt.length < 54000:
-                    video = yt.streams.filter(only_audio=True).first()
-                    out_file=video.download(output_path="upload/")
-                    base, ext = os.path.splitext(out_file)
-                    new_file = base+'.mp3'
-                    if os.path.exists(out_file):
-                        os.rename(out_file, new_file)
-                    if  (path.split('///')[1]=='0'):
-                        model = whisper.load_model('tiny')
-                        print("tiny model loaded.")
-                    elif(path.split('///')[1]=='1'):
-                        model = whisper.load_model('base')
-                        print("base model loaded.")
-                    elif(path.split('///')[1]=='2'):
-                        model = whisper.load_model('small')
-                        print("small model loaded.")
-                    elif(path.split('///')[1]=='3'):
-                        model = whisper.load_model('medium')
-                        print("medium model loaded.")
-                    elif(path.split('///')[1]=='4'):
-                        model = whisper.load_model('/home/aura/whisper_hakka/model/whisper-base-hakka-20230306.pt')
-                        print("hakka model loaded.")
-                    transcribe = model.transcribe(audio=new_file)
+                print(path.split('///')[0])
+                videoID=path.split('watch?v=')[1].split('///')[0]
+                if not os.path.exists(fileRootDir+"/openai/upload/"+videoID+".wav"):
+                    os.system("python3 download.py "+path.split('///')[0])
+                    os.system("mv output_"+videoID+".wav upload/output_"+videoID+".wav")
+                if  (path.split('///')[1]=='0'):
+                    model = whisper.load_model('tiny')
+                    print("tiny model loaded.")
+                elif(path.split('///')[1]=='1'):
+                    model = whisper.load_model('base')
+                    print("base model loaded.")
+                elif(path.split('///')[1]=='2'):
+                    model = whisper.load_model('small')
+                    print("small model loaded.")
+                elif(path.split('///')[1]=='3'):
+                    model = whisper.load_model('medium')
+                    print("medium model loaded.")
+                elif(path.split('///')[1]=='4'):
+                    model = whisper.load_model('/home/aura/whisper_hakka/model/whisper-base-hakka-20230306.pt')
+                    print("hakka model loaded.")
+                transcribe = model.transcribe(audio="upload/output_"+videoID+".wav")
+                segments = transcribe['segments']
+                print('decode/'+videoID+'!!!'+path.split('///')[1]+'.srt')
+                output_file=open('decode/'+videoID+'!!!'+path.split('///')[1]+'.srt','w',encoding='utf8')
+                # print(segments)
+                for segment in segments:
+                    start = int(segment['start'])
+                    end = int(segment['end'])
+                    startm, starts = divmod(start, 60)
+                    starth, startm = divmod(startm, 60)
+                    endm, ends = divmod(end, 60)
+                    endh, endm = divmod(endm, 60)
+                    (start//3600)
+                    # output_file.write(str(segment['id']+1)+'\n'+'{:02d}:{:02d}:{:02d}'.format(starth, startm, starts)+',000 --> '+'{:02d}:{:02d}:{:02d}'.format(endh, endm, ends)+',000\n'+segment['text']+'\n\n')
+                    output_file.write(str(start)+'***'+str(end)+'***'+segment['text']+'*****')
+                output_file.close()
+                if(path.split('///')[1]=='4'):
+                    model = whisper.load_model('base')
+                    print("base model loaded.")
+                    transcribe = model.transcribe(audio="upload/"+videoID+".wav")
                     segments = transcribe['segments']
-                    print('decode/'+path.split('watch?v=')[1].split('///')[0]+'!!!'+path.split('///')[1]+'.srt')
-                    output_file=open('decode/'+path.split('watch?v=')[1].split('///')[0]+'!!!'+path.split('///')[1]+'.srt','w',encoding='utf8')
-                    # print(segments)
+                    print('decode/'+videoID+'!!!1.srt')
+                    output_file=open('decode/'+videoID+'!!!1.srt','w',encoding='utf8')
                     for segment in segments:
                         start = int(segment['start'])
                         end = int(segment['end'])
@@ -83,9 +96,7 @@ def decode():
                         # output_file.write(str(segment['id']+1)+'\n'+'{:02d}:{:02d}:{:02d}'.format(starth, startm, starts)+',000 --> '+'{:02d}:{:02d}:{:02d}'.format(endh, endm, ends)+',000\n'+segment['text']+'\n\n')
                         output_file.write(str(start)+'***'+str(end)+'***'+segment['text']+'*****')
                     output_file.close()
-                    print('success '+path+'\n')
-                else:
-                    print('audio too long')
+                print('success '+path+'\n')
             elif path!="":
                 print('../'+path)
                 os.system('whisper ../'+path+' --language zh --model base > '+path.split('/')[1].split('.')[0]+'_time.txt')

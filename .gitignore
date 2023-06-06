@@ -7,3 +7,4 @@ openai/decode/*
 openai/upload/*
 upload/*
 demo/*
+download/*
