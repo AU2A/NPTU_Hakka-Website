@@ -2,9 +2,10 @@ import whisper
 import time
 import os
 import multiprocessing as mp
+import shutil
+import random
 from pytube import YouTube
 from datetime import timedelta
-import shutil
 from datetime import datetime
 
 fileRootDir='/home/aura/hakka_web'
@@ -17,7 +18,8 @@ def decode():
         if len(fileCnt)>0:
             
             while os.path.exists(fileRootDir+"/openai_lock"):
-                time.sleep(0.1)
+                time.sleep(0.1+0.1*random.randint(1,5))
+            
             
             lock = open(fileRootDir+"/openai_lock", "x")
             time.sleep(0.1)
@@ -45,8 +47,8 @@ def decode():
                 print(path.split('///')[0])
                 videoID=path.split('watch?v=')[1].split('///')[0]
                 if not os.path.exists(fileRootDir+"/openai/upload/"+videoID+".wav"):
-                    os.system("python3 download.py "+path.split('///')[0])
-                    os.system("mv output_"+videoID+".wav upload/output_"+videoID+".wav")
+                    os.system("python3 openai/download.py "+path.split('///')[0])
+                    os.system("mv output_"+videoID+".wav openai/upload/output_"+videoID+".wav")
                 if  (path.split('///')[1]=='0'):
                     model = whisper.load_model('tiny')
                     print("tiny model loaded.")
@@ -98,24 +100,22 @@ def decode():
                     output_file.close()
                 print('success '+path+'\n')
             elif path!="":
-                print('../'+path)
-                os.system('whisper ../'+path+' --language zh --model base > '+path.split('/')[1].split('.')[0]+'_time.txt')
+                print(path)
+                os.system('whisper '+path+' --language zh --model base > openai/decode/'+path.split('/')[1].split('.')[0]+'_time.txt')
                 time.sleep(0.1)
                 file_name=path.split('/')[1].split('.')[0]
                 output_file_name=path.split('/')[1].split('.')[0]
-                input_file = open(file_name+'_time.txt','r',encoding='utf8')
-                output_file = open(file_name+'_html.txt','w',encoding='utf8')
+                input_file  = open(fileRootDir+'/openai/decode/'+file_name+'_time.txt','r',encoding='utf8')
+                output_file = open(fileRootDir+'/openai/decode/'+file_name+'_html.txt','w',encoding='utf8')
                 for line in input_file.readlines():
                     output_file.write(line.replace('\n','<br>\n'))
                 output_file.close()
                 input_file.close()
-                shutil.move(fileRootDir+'/openai/'+file_name+'_time.txt',fileRootDir+'/openai/decode/'+file_name+'_time.txt')
-                shutil.move(fileRootDir+'/openai/'+file_name+'_html.txt',fileRootDir+'/openai/decode/'+file_name+'_html.txt')
-                os.remove(fileRootDir+'/openai/'+file_name+'.json')
-                os.remove(fileRootDir+'/openai/'+file_name+'.srt')
-                os.remove(fileRootDir+'/openai/'+file_name+'.tsv')
-                os.remove(fileRootDir+'/openai/'+file_name+'.txt')
-                os.remove(fileRootDir+'/openai/'+file_name+'.vtt')
+                os.remove(fileRootDir+'/'+file_name+'.json')
+                os.remove(fileRootDir+'/'+file_name+'.srt')
+                os.remove(fileRootDir+'/'+file_name+'.tsv')
+                os.remove(fileRootDir+'/'+file_name+'.txt')
+                os.remove(fileRootDir+'/'+file_name+'.vtt')
             
         # time.sleep(0.1)
         # while os.path.exists(fileRootDir+"/openai_lock"):

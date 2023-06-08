@@ -1,10 +1,8 @@
-.well-known/*
-.vscode/*
+.well-known/ZZZsftp.json
+.vscode/acme-challenge/Hnehxx12Ot26u5H3vMxtm_BLe3hp2PrJ3ibVQ-3w2gc
 upload/*
 decode/*
 node_modules/*
 openai/decode/*
 openai/upload/*
 upload/*
-demo/*
-download/*
