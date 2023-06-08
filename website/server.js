@@ -32,9 +32,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-var privateKey = fs.readFileSync('/etc/letsencrypt/live/hakka.corelab.dev/privkey.pem', 'utf8')
-var certificate = fs.readFileSync('/etc/letsencrypt/live/hakka.corelab.dev/cert.pem', 'utf8')
-var ca = fs.readFileSync('/etc/letsencrypt/live/hakka.corelab.dev/chain.pem', 'utf8');
+var domainName = 'hakka.corelab.dev'
+
+var privateKey = fs.readFileSync('/etc/letsencrypt/live/'+domainName+'/privkey.pem', 'utf8')
+var certificate = fs.readFileSync('/etc/letsencrypt/live/'+domainName+'/cert.pem', 'utf8')
+var ca = fs.readFileSync('/etc/letsencrypt/live/'+domainName+'/chain.pem', 'utf8');
 var credentials = {
   key: privateKey,
   cert: certificate,
