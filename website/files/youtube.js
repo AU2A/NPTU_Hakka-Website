@@ -68,7 +68,7 @@ function reloadurl() {
     lyric = ''
     player.loadVideoById(videoId = val, startSeconds = 0)
     if (!errorStatus) {
-        fetch('https://hakka.corelab.dev/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
+        fetch('https://'+domainName+'/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
             method: 'get',
         }).then(res => res.text()).then(res => {
             if (document.getElementById('lang').value == 0) {
@@ -102,13 +102,13 @@ function reloadurl() {
 function autoRefresh() {
     if (!errorStatus && tagurl != '') {
         console.log(player.playerInfo.currentTime);
-        fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl, {
+        fetch('https://'+domainName+':5002/decodeyt?tag=' + tagurl, {
             method: 'get',
         }).then(res => res.text()).then(res => {
             lyric = res.split('*****');
         })
         if (hakka == true) {
-            fetch('https://hakka.corelab.dev:5002/decodeyt?tag=' + tagurl.split('!!!')[0] + '!!!1', {
+            fetch('https://'+domainName+':5002/decodeyt?tag=' + tagurl.split('!!!')[0] + '!!!1', {
                 method: 'get',
             }).then(res => res.text()).then(res => {
                 lyric_hakka = res.split('*****');

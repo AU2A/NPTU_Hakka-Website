@@ -1,3 +1,5 @@
+var domainName = 'hakka.corelab.dev'
+
 const recordBtn = document.querySelector('.record-btn')
 const player = document.querySelector('.audio-player')
 
@@ -113,7 +115,7 @@ function useDemo() {
     id=res.split('_')[0]+'_'+res.split('_')[1]
     tag=res+'.wav'
     // console.log(res)
-    var url ='https://hakka.corelab.dev/demo/'+id+'.wav'
+    var url ='https://'+domainName+'/demo/'+id+'.wav'
     $('#src').attr('src', url);
     document.getElementById('audio').load();
     document.getElementById('downloadBtn').href = url
@@ -148,7 +150,7 @@ function refreshDecode() {
     document.getElementById('response').innerHTML = '請上傳副檔名為.wav的檔案';
   }
   else if(tag!=''){
-    fetch('https://hakka.corelab.dev:5002/decode?tag='+tag, {
+    fetch('https://'+domainName+':5002/decode?tag='+tag, {
       method: 'get',
     }).then(res => res.text()).then(res => {
       document.getElementById('response').innerHTML = res;
