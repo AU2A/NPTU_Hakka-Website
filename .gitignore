@@ -1,5 +1,5 @@
-.well-known/acme-challenge/Hnehxx12Ot26u5H3vMxtm_BLe3hp2PrJ3ibVQ-3w2gc
-.vscode/ZZZsftp.json
+.well-known/acme-challenge/*
+.vscode/*
 upload/*
 decode/*
 website/node_modules/*
