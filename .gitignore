@@ -1,6 +1,3 @@
-.well-known/acme-challenge/*
-.vscode/*
-.gitignore
 upload/*
 decode/*
 website/node_modules/*

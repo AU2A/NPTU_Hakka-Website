@@ -99,12 +99,6 @@ app.post('/upload_files', upload.any('file'), (req, res) => {
 
 })
 
-// app.get('/decode', (req, res) => {
-//   const output = execSync('cat decode/output.txt', { shell: 'bash', encoding: 'utf-8' })
-//   console.log(output)
-//   res.send(output)
-// })
-
 app.get('/uploadyt', (req, res) => {
   tag = req.originalUrl.split('url=')[1].split('&model=')[0]
   model = req.originalUrl.split('model=')[1]
@@ -112,15 +106,6 @@ app.get('/uploadyt', (req, res) => {
   try {
     console.log('echo "https://www.youtube.com/watch?v=' + tag + '///' + model + '" >> aidecodeList.txt')
     execSync('echo "https://www.youtube.com/watch?v=' + tag + '///' + model + '" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
-    // if (model == 4) {
-    //   console.log('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt')
-    //   execSync('echo "https://www.youtube.com/watch?v=' + tag + '///1" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
-    // }
-    // if(tag.split('_')[0]=='ai'){
-    //     temp = execSync('cat openai/'+tag+'_html.txt', { shell: 'bash', encoding: 'utf-8' })
-    // }else{
-    //     temp = execSync('cat decode/'+tag+'.txt', { shell: 'bash', encoding: 'utf-8' })
-    // }
   } catch {
     temp = ''
   }
@@ -187,21 +172,6 @@ app2.get('/decode', (req, res) => {
     temp = ''
     console.log('wait for ' + tag)
   }
-  // var output = ''
-  // var outputArry = temp.split('\n')
-  // for (let i = 0; i < outputArry.length; i++) {
-  //     if (outputArry[i] != '') {
-  //         var nowLine = outputArry[i].split('\r')
-  //         var endIndex = nowLine.length - 1
-  //         if (nowLine[endIndex] == '') {
-  //             output = output + '<br>' + nowLine[endIndex - 1]
-  //             console.log(nowLine[endIndex - 1])
-  //         } else {
-  //             output = output + '<br>' + nowLine[endIndex]
-  //             console.log(nowLine[endIndex])
-  //         }
-  //     }
-  // }
   if (temp == '') {
     temp = '請稍後...'
   }
