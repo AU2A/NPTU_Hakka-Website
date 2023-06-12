@@ -126,7 +126,7 @@ def decode():
         time.sleep(1)
         
 def cleanFile():
-    delayTime = 86400*7
+    delayTime = 86400
     while(True):
         time.sleep(delayTime)
         print('clean file')

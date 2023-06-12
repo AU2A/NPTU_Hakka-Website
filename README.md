@@ -43,6 +43,12 @@ var domainName = 'New domain name' //要修改的地方
 <a class="btn" href="https://*New domain name*/youtube">影片辨識</a>
 ```
 
+## NodeJS
+要先到`website/`底下安裝網頁需要的套件
+```bash
+~/Hakka_Website/website$ npm install
+```
+
 ## 分開測試
 請先分開測試程序與套件是否有缺，請在專案位置執行
 `web`

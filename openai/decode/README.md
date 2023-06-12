@@ -1,0 +1,3 @@
+# Hakka_Website
+
+這裡放的Openai Whisper解碼完成Youtube影片的文字檔案
