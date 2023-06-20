@@ -6,6 +6,7 @@ temp=$(md5sum initFiles/psw)
 ans=$(cat initFiles/ans)
 
 if [ "$temp" = "$ans" ]; then
+    echo "Welcome. Starting server~"
     echo $domain > domainName
     # echo "test.corelab.dev" > domainName
 
