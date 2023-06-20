@@ -1,7 +1,7 @@
-website/node_modules/*
-keys/cert.pem
-keys/chain.pem
-keys/privkey.pem
-openai/model/base.pt
-openai/model/small.pt
-openai/model/tiny.pt
+files/website/node_modules/*
+files/keys/cert.pem
+files/keys/chain.pem
+files/keys/privkey.pem
+files/openai/model/base.pt
+files/openai/model/small.pt
+files/openai/model/tiny.pt

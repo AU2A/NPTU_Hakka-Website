@@ -25,7 +25,7 @@ content = f.readlines()
 
 o.write('var domainName = \''+domain+'\'\n\n')
 
-for i in range(2,160):
+for i in range(2,163):
     o.write(content[i])
 
 f.close()

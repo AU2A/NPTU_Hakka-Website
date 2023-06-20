@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y \
 
 RUN pip3 install openai-whisper pytube ffmpeg-python yt-dlp
 
-COPY ./* /Hakka_Website
+COPY ./files /Hakka_Website
 
 WORKDIR /Hakka_Website/website
 
