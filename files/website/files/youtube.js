@@ -51,8 +51,10 @@ var hakka = false
 var lyric_hakka = ''
 var now_lang = ''
 var val =''
+var reload=false;
 
 function reloadurl() {
+    reload=true
     val = document.getElementById('url').value;
     document.getElementById('player').style.visibility = 'hidden';
     errorStatus = false
@@ -89,6 +91,7 @@ function reloadurl() {
             player.stopVideo();
         })
     }
+    reload=false
 
 }
 
@@ -116,12 +119,12 @@ function refreshlyric() {
     if(val==""){
         document.getElementById('response').style.visibility = 'hidden';
     }
-    else if (lyric[0] != '請稍後...' &&player.playerInfo.currentTime==0) {
+    else if (!reload&&lyric[0] != '請稍後...' &&player.playerInfo.currentTime==0) {
         document.getElementById('response').style.visibility = 'visible';
         document.getElementById('player').style.visibility = 'visible';
         document.getElementById('response').innerHTML = "辨識完成，請播放"
     }
-    else if (lyric[0] != '請稍後...') {
+    else if (!reload&&lyric[0] != '請稍後...') {
         document.getElementById('player').style.visibility = 'visible';
         curtime = player.playerInfo.currentTime*100
         for (i = 0; i < lyric.length; i++) {
@@ -147,8 +150,8 @@ function refreshlyric() {
         }
     }
     else {
-        player.stopVideo();
         document.getElementById('player').style.visibility = 'hidden';
+        player.stopVideo();
         cnt=(cnt+1)%6;
         var temp = "請稍後"
         for(i=0;i<cnt;i++){
