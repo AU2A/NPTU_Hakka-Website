@@ -1,4 +1,4 @@
-var domainName = 'test.corelab.dev'
+var domainName = '127.0.0.1'
 
 const recordBtn = document.querySelector('.record-btn')
 const player = document.querySelector('.audio-player')

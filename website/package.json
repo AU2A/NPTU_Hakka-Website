@@ -1,6 +1,4 @@
 {
-  "name": "hakka_web",
-  "version": "1.0.0",
   "description": "",
   "main": "server.js",
   "dependencies": {

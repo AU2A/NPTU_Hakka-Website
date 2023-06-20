@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-var domainName = 'test.corelab.dev'
+var domainName = 'domain here'
 
 var privateKey = fs.readFileSync('keys/privkey.pem', 'utf8')
 var certificate = fs.readFileSync('keys/cert.pem', 'utf8')

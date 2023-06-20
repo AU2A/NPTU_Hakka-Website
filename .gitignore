@@ -1,1 +1,7 @@
 website/node_modules/*
+keys/cert.pem
+keys/chain.pem
+keys/privkey.pem
+openai/model/base.pt
+openai/model/small.pt
+openai/model/tiny.pt
