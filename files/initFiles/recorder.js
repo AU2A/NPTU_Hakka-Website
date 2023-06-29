@@ -174,10 +174,13 @@ setInterval('refreshDecode()', 1000);
 function refreshlyric() {
   curtime = document.getElementById("audio").currentTime*100
   console.log(curtime)
-  if(lyric!=''){
+  if(lyric!=''&&curtime==0){
+    document.getElementById('response').innerHTML = "請播放"
+  }
+  else if(lyric!=''){
     for (i = 0; i < lyric.length; i++) {
       now = lyric[i].split('!!!')
-      if (now[0] < curtime && curtime < now[1]) {
+      if (now[0] <= curtime && curtime <= now[1]) {
           document.getElementById('response').innerHTML = now[2]
           break;
       }

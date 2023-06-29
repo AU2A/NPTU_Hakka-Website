@@ -4,7 +4,7 @@ echo $psw > initFiles/psw
 
 temp=$(md5sum initFiles/psw)
 ans=$(cat initFiles/ans)
-
+echo ans
 if [ "$temp" = "$ans" ]; then
     echo "Welcome. Starting server~"
     echo $domain > domainName

@@ -2,6 +2,4 @@ files/website/node_modules/*
 files/keys/cert.pem
 files/keys/chain.pem
 files/keys/privkey.pem
-files/openai/model/base.pt
-files/openai/model/small.pt
-files/openai/model/tiny.pt
+files/openai/model/*.pt

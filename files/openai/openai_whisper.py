@@ -67,9 +67,9 @@ def main():
                 # elif(path.split('///')[1]=='3'):
                 #     model = whisper.load_model('openai/model/.pt')
                 #     print('medium model loaded.')
-                # elif(path.split('///')[1]=='4'):
-                #     model = whisper.load_model('/home/aura/whisper_hakka/model/whisper-base-hakka-20230306.pt')
-                #     print('hakka model loaded.')
+                elif(path.split('///')[1]=='4'):
+                    model = whisper.load_model('openai/model/whisper-base-zh-20230628.pt')
+                    print('hakka model loaded.')
                 transcribe = model.transcribe(audio='openai/upload/output_'+videoID+'.wav')
                 segments = transcribe['segments']
                 print('openai/decode/'+videoID+'!!!'+path.split('///')[1]+'.srt')
@@ -107,7 +107,7 @@ def main():
                 print('success '+path+'\n')
             elif path!='':
                 print(path)
-                model = whisper.load_model('openai/model/base.pt')
+                model = whisper.load_model('openai/model/whisper-base-zh-20230628.pt')
                 print('base model loaded.')
                 transcribe = model.transcribe(audio=path)
                 segments = transcribe['segments']
