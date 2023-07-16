@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y \
     parallel \
     python3-pip
 
-RUN pip3 install openai-whisper pytube ffmpeg-python yt-dlp
+RUN pip3 install openai-whisper pytube ffmpeg-python yt-dlp datetime librosa
 
 COPY ./files /Hakka_Website
 
