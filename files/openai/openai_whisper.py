@@ -7,9 +7,15 @@ import os
 import multiprocessing as mp
 import shutil
 import random
+import librosa
 from pytube import YouTube
 from datetime import timedelta
 from datetime import datetime
+
+model_tiny = whisper.load_model('openai/model/tiny.pt')
+model_base = whisper.load_model('openai/model/base.pt')
+model_small = whisper.load_model('openai/model/small.pt')
+model_hakka = whisper.load_model('openai/model/whisper-base-zh-20230711.pt')
 
 def main():
     while True:
@@ -17,60 +23,80 @@ def main():
         fileCnt=f.readlines()
         f.close()
         if len(fileCnt)>0:
-            # print(fileCnt)
+            # wait for decode files
             while os.path.exists('openai_lock'):
                 time.sleep(0.1+0.1*random.randint(1,5))
-            
-            
             lock = open('openai_lock', 'x')
             time.sleep(0.1)
             lock.close()
-            
             f = open('aidecodeList.txt', 'r')
             now=f.readlines()
             f.close()
-                
             new_file = open('aidecodeList.txt', 'w')
             for i in range(1,len(now)):
                 new_file.write(now[i])
             new_file.close()
-            
             if os.path.exists('openai_lock'):
                 os.remove('openai_lock')
-
             path=''
             try:
                 path=now[0].split('\n')[0]
             except:
                 time.sleep(0.1)
 
+            #check decode youtube or record
+            decode_start = time.time()
             if(path.split('://')[0]=='https'):
+                # check path
                 print(path.split('///')[0])
                 videoID=path.split('watch?v=')[1].split('///')[0]
+
+                output_file=open('openai/decode/time_'+videoID+'!!!'+path.split('///')[1]+'.srt','w',encoding='utf8')
+                output_file.write('downloading')
+                output_file.close()
+
+                # download audio
                 if not os.path.exists('openai/upload/output_'+videoID+'.wav'):
                     print('start    download output_'+videoID+'.wav')
                     os.system('python3 openai/download.py '+path.split('///')[0]+' > /dev/null')
                     print('complete download output_'+videoID+'.wav')
                     time.sleep(0.1)
                     os.system('mv output_'+videoID+'.wav openai/upload/output_'+videoID+'.wav')
+                    os.system('sox openai/upload/output_'+videoID+'.wav -e signed -c 1 -r 16000 -b 16 openai/upload/output_'+videoID+'new.wav')
+                    os.system('mv openai/upload/output_'+videoID+'new.wav openai/upload/output_'+videoID+'.wav')
                 else:
                     print('output_'+videoID+'.wav exist')
-                if  (path.split('///')[1]=='0'):
-                    model = whisper.load_model('openai/model/tiny.pt')
-                    print('tiny model loaded.')
-                elif(path.split('///')[1]=='1'):
-                    model = whisper.load_model('openai/model/base.pt')
-                    print('base model loaded.')
+
+                # decode use time
+                output_file=open('openai/decode/time_'+videoID+'!!!'+path.split('///')[1]+'.srt','w',encoding='utf8')
+                if(path.split('///')[1]=='4'):
+                    output_file.write(str(int(round(librosa.get_duration(path='openai/upload/output_'+videoID+'.wav')/15))))
+                # elif(path.split('///')[1]=='3'):
+                    # output_file.write(librosa.get_duration(path='openai/upload/output_'+videoID+'.wav')/5)
                 elif(path.split('///')[1]=='2'):
-                    model = whisper.load_model('openai/model/small.pt')
-                    print('small model loaded.')
+                    output_file.write(str(int(round(librosa.get_duration(path='openai/upload/output_'+videoID+'.wav')/10))))
+                elif(path.split('///')[1]=='1'):
+                    output_file.write(str(int(round(librosa.get_duration(path='openai/upload/output_'+videoID+'.wav')/15))))
+                else: # (path.split('///')[1]=='0'):
+                    output_file.write(str(int(round(librosa.get_duration(path='openai/upload/output_'+videoID+'.wav')/20))))
+                output_file.close()
+
+                if(path.split('///')[1]=='4'):
+                    print('hakka model loaded.')
+                    transcribe = model_hakka.transcribe(audio='openai/upload/output_'+videoID+'.wav')
                 # elif(path.split('///')[1]=='3'):
                 #     model = whisper.load_model('openai/model/.pt')
                 #     print('medium model loaded.')
-                elif(path.split('///')[1]=='4'):
-                    model = whisper.load_model('openai/model/whisper-base-zh-20230628.pt')
-                    print('hakka model loaded.')
-                transcribe = model.transcribe(audio='openai/upload/output_'+videoID+'.wav')
+                elif(path.split('///')[1]=='2'):
+                    print('small model loaded.')
+                    transcribe = model_small.transcribe(audio='openai/upload/output_'+videoID+'.wav')
+                elif(path.split('///')[1]=='1'):
+                    print('base model loaded.')
+                    transcribe = model_base.transcribe(audio='openai/upload/output_'+videoID+'.wav')
+                else: # (path.split('///')[1]=='0'):
+                    print('tiny model loaded.')
+                    transcribe = model_tiny.transcribe(audio='openai/upload/output_'+videoID+'.wav')
+
                 segments = transcribe['segments']
                 print('openai/decode/'+videoID+'!!!'+path.split('///')[1]+'.srt')
                 output_file=open('openai/decode/'+videoID+'!!!'+path.split('///')[1]+'.srt','w',encoding='utf8')
@@ -87,9 +113,8 @@ def main():
                     output_file.write(str(start)+'!!!'+str(end)+'!!!'+segment['text']+'*****')
                 output_file.close()
                 if(path.split('///')[1]=='4'):
-                    model = whisper.load_model('openai/model/base.pt')
                     print('base model loaded.')
-                    transcribe = model.transcribe(audio='openai/upload/'+videoID+'.wav')
+                    transcribe = model_base.transcribe(audio='openai/upload/output_'+videoID+'.wav')
                     segments = transcribe['segments']
                     print('openai/decode/'+videoID+'!!!1.srt')
                     output_file=open('openai/decode/'+videoID+'!!!1.srt','w',encoding='utf8')
@@ -107,11 +132,15 @@ def main():
                 print('success '+path+'\n')
             elif path!='':
                 print(path)
-                model = whisper.load_model('openai/model/whisper-base-zh-20230628.pt')
-                print('base model loaded.')
-                transcribe = model.transcribe(audio=path)
-                segments = transcribe['segments']
                 file_name=path.split('/')[1].split('.')[0]
+
+                output_file=open('openai/decode/time_'+file_name+'_html.txt','w',encoding='utf8')
+                output_file.write(str(int(round(librosa.get_duration(path=path)/15))))
+                output_file.close()
+
+                print('base model loaded.')
+                transcribe = model_hakka.transcribe(audio=path)
+                segments = transcribe['segments']
                 print('openai/decode/'+file_name+'_html.txt')
                 output_file=open('openai/decode/'+file_name+'_html.txt','w',encoding='utf8')
                 for segment in segments:
@@ -126,6 +155,9 @@ def main():
                     output_file.write(str(start)+'!!!'+str(end)+'!!!'+segment['text']+'*****')
                 output_file.close()
                 print('success '+path+'\n')
+            decode_end = time.time()
+            print(f'Use time {decode_end-decode_start}\n')
+
 
         # time.sleep(0.1)
         # while os.path.exists(fileRootDir+'/openai_lock'):

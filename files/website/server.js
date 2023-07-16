@@ -8,18 +8,18 @@ const multer = require("multer")
 const app = express()
 const port = 443
 
-var date = new Date();
+var date = new Date()
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
 // app.set('demo', './demo')
 
-app.use(express.static('static'));
-app.use(express.static(__dirname, { dotfiles: 'allow' }));
+app.use(express.static('static'))
+app.use(express.static(__dirname, { dotfiles: 'allow' }))
 
-app.use(express.static(__dirname + '/files'));
+app.use(express.static(__dirname + '/files'))
 
-// app.use(express.static(__dirname + '/demo'));
+// app.use(express.static(__dirname + '/demo'))
 
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
@@ -32,20 +32,20 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-var domainName = 'test.corelab.dev'
+var domainName = 'domain'
 
 var privateKey = fs.readFileSync('keys/privkey.pem', 'utf8')
 var certificate = fs.readFileSync('keys/cert.pem', 'utf8')
-var ca = fs.readFileSync('keys/chain.pem', 'utf8');
+var ca = fs.readFileSync('keys/chain.pem', 'utf8')
 var credentials = {
   key: privateKey,
   cert: certificate,
   ca: ca
-};
+}
 
 app.get('/', (req, res) => {
   // fs.writeFile('decode/output.txt', '', (err) => {
-  //   if (err) throw err;
+  //   if (err) throw err
   // })
   res.render('index')
 })
@@ -164,16 +164,25 @@ app2.get('/decode', (req, res) => {
   var temp = ''
   try {
     if (tag.split('_')[0] == 'ai') {
-      temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8');
+      temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
     } else {
-      temp = fs.readFileSync('decode/' + tag + '.txt', 'utf8');
+      temp = fs.readFileSync('decode/' + tag + '.txt', 'utf8')
     }
   } catch {
     temp = ''
     // console.log('wait for ' + tag)
   }
   if (temp == '') {
-    temp = '請稍後...'
+    temp = '請稍後 '
+    try {
+      if (tag.split('_')[0] == 'ai') {
+        temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
+      } else {
+        temp += fs.readFileSync('decode/time_' + tag + '.txt', 'utf8')
+      }
+    } catch {
+      temp += 'na'
+    }
   }
   res.send(temp)
 })
@@ -182,13 +191,18 @@ app2.get('/decodeyt', (req, res) => {
   tag = req.originalUrl.split('tag=')[1].split('.')[0]
   var temp = ''
   try {
-    temp = fs.readFileSync('openai/decode/' + tag + '.srt', 'utf8');
+    temp = fs.readFileSync('openai/decode/' + tag + '.srt', 'utf8')
   } catch {
     temp = ''
     // console.log('wait for ' + tag)
   }
   if (temp == '') {
-    temp = '請稍後...'
+    temp = '請稍後 '
+    try {
+      temp += fs.readFileSync('openai/decode/time_' + tag + '.srt', 'utf8')
+    } catch {
+      temp += 'na'
+    }
   }
   res.send(temp)
 })

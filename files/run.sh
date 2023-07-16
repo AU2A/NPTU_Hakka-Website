@@ -1,5 +1,15 @@
 #!/bin/bash
 
+trap ctrl_c INT
+
+function ctrl_c() {
+    echo ""
+    echo "GoodBye~"
+    kill $(ps -ef | grep "python3 openai/openai_whisper.py" | grep -v "grep" | awk '{print $2}')
+    kill $(ps -ef | grep "python3 openai/delete.py" | grep -v "grep" | awk '{print $2}')
+    exit 0
+}
+
 echo $psw > initFiles/psw
 
 temp=$(md5sum initFiles/psw)
@@ -11,7 +21,7 @@ if [ "$temp" = "$ans" ]; then
     # echo "test.corelab.dev" > domainName
 
     python3 init.py
-    python3 openai/openai_whisper.py & python3 openai/openai_whisper.py & python3 openai/openai_whisper.py & python3 openai/delete.py & node website/server.js
+    python3 openai/openai_whisper.py & python3 openai/delete.py & node website/server.js
 else
     echo "Wrong Password. Bye Bye~"
 fi

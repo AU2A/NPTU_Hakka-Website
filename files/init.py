@@ -12,7 +12,7 @@ for i in range(34):
 
 o.write('var domainName = \''+domain+'\'\n\n')
 
-for i in range(36,202):
+for i in range(36,len(content)):
     o.write(content[i])
 
 f.close()
@@ -25,7 +25,7 @@ content = f.readlines()
 
 o.write('var domainName = \''+domain+'\'\n\n')
 
-for i in range(2,163):
+for i in range(2,len(content)):
     o.write(content[i])
 
 f.close()
@@ -38,7 +38,7 @@ content = f.readlines()
 
 o.write('var domainName = \''+domain+'\'\n\n')
 
-for i in range(2,245):
+for i in range(2,len(content)):
     o.write(content[i])
 
 f.close()
@@ -55,7 +55,7 @@ for i in range(17):
 o.write('            <a class="btn" href="https://'+domain+'/">音檔辨識</a>\n')
 o.write('            <a class="btn" href="https://'+domain+'/youtube">影片辨識</a>\n')
 
-for i in range(19,66):
+for i in range(19,len(content)):
     o.write(content[i])
 
 f.close()
@@ -72,7 +72,7 @@ for i in range(15):
 o.write('            <a class="btn" href="https://'+domain+'/">音檔辨識</a>\n')
 o.write('            <a class="btn" href="https://'+domain+'/youtube">影片辨識</a>\n')
 
-for i in range(17,46):
+for i in range(17,len(content)):
     o.write(content[i])
 
 f.close()
