@@ -130,7 +130,7 @@ function refreshlyric() {
                 temp += "預計辨識時間：" + lyric[0].split(' ')[1] + "秒<br>"
             }
             cnt = (cnt + 1) % 6
-            temp += "請稍後<br> "
+            temp += "請稍後<br>."
             for (i = 0; i < cnt; i++) {
                 temp += "."
             }
