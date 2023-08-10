@@ -60,27 +60,21 @@ app.post('/upload_files', upload.any('file'), (req, res) => {
   lang = req.originalUrl.split('?lang=')[1]
   var fileInfo = req.files[0]
   if (fileInfo.path.endsWith('.wav') || fileInfo.path == 'upload/blob') {
-    if (lang < 3) {
-      if (lang == 0) {
-        newFileName = 'chinese_'
-      } else if (lang == 1) {
-        newFileName = 'hakka_'
-      } else {
-        newFileName = 'chAndHa_'
-      }
+    if (lang ==2) {
+      newFileName = 'ch_'
       if (fileInfo.path == 'upload/blob') {
         newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
       } else {
         newFileName = 'upload/' + newFileName + 'upload_' + Date.now() + '.wav'
       }
-      console.log("espnet file name: " + newFileName)
+      console.log("whisper file name: " + newFileName)
       execSync('mv ' + fileInfo.path + ' ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
       execSync('sox ' + newFileName + ' -e signed -c 1 -r 16000 -b 16 ' + newFileName.split('.wav')[0] + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
       execSync('mv ' + newFileName.split('.wav')[0] + '.new.wav ' + newFileName, { shell: 'bash', encoding: 'utf-8' })
-      execSync('echo \"' + newFileName + '\" >> decodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+      execSync('echo \"' + newFileName + '\" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
       res.send(newFileName)
     } else if (lang == 3) {
-      newFileName = 'ai_'
+      newFileName = 'ha_'
       if (fileInfo.path == 'upload/blob') {
         newFileName = 'upload/' + newFileName + 'record_' + Date.now() + '.wav'
       } else {
@@ -127,7 +121,7 @@ app.get('/use_demo', (req, res) => {
     fileName = 'hakka_test3_' + Date.now()
   }
 
-  execSync('cp demo/' + orfileName + '.wav upload/' + fileName + '.wav', { shell: 'bash', encoding: 'utf-8' })
+  execSync('cp website/demo/' + orfileName + '.wav upload/' + fileName + '.wav', { shell: 'bash', encoding: 'utf-8' })
   execSync('sox upload/' + fileName + '.wav -e signed -c 1 -r 16000 -b 16 upload/' + fileName + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
   execSync('mv upload/' + fileName + '.new.wav upload/' + fileName + '.wav', { shell: 'bash', encoding: 'utf-8' })
   execSync('echo \"upload/' + fileName + '.wav\" >> decodeList.txt', { shell: 'bash', encoding: 'utf-8' })
@@ -163,11 +157,12 @@ app2.get('/decode', (req, res) => {
   tag = req.originalUrl.split('tag=')[1].split('.')[0]
   var temp = ''
   try {
-    if (tag.split('_')[0] == 'ai') {
-      temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
-    } else {
-      temp = fs.readFileSync('decode/' + tag + '.txt', 'utf8')
-    }
+    temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
+    // if (tag.split('_')[0] == 'ai') {
+    //   temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
+    // } else {
+    //   temp = fs.readFileSync('decode/' + tag + '.txt', 'utf8')
+    // }
   } catch {
     temp = ''
     // console.log('wait for ' + tag)
@@ -175,11 +170,12 @@ app2.get('/decode', (req, res) => {
   if (temp == '') {
     temp = '請稍後 '
     try {
-      if (tag.split('_')[0] == 'ai') {
-        temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
-      } else {
-        temp += fs.readFileSync('decode/time_' + tag + '.txt', 'utf8')
-      }
+      temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
+      // if (tag.split('_')[0] == 'ai') {
+      //   temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
+      // } else {
+      //   temp += fs.readFileSync('decode/time_' + tag + '.txt', 'utf8')
+      // }
     } catch {
       temp += 'na'
     }

@@ -1,4 +1,4 @@
-var domainName = 'domain'
+var domainName = 'test.corelab.dev'
 
 const recordBtn = document.querySelector('.record-btn')
 const player = document.querySelector('.audio-player')
@@ -161,7 +161,7 @@ function refreshDecode() {
           temp += "預計辨識時間：" + res.split(' ')[1] + "秒<br>"
         }
         cnt = (cnt + 1) % 6
-        temp += "請稍後<br>"
+        temp += "請稍後<br>."
         for (i = 0; i < cnt; i++) {
           temp += "."
         }

@@ -139,7 +139,10 @@ def main():
                 output_file.close()
 
                 print('base model loaded.')
-                transcribe = model_hakka.transcribe(audio=path)
+                if path[0:2]=='ha':
+                    transcribe = model_hakka.transcribe(audio=path)
+                else:
+                    transcribe = model_base.transcribe(audio=path)
                 segments = transcribe['segments']
                 print('openai/decode/'+file_name+'_html.txt')
                 output_file=open('openai/decode/'+file_name+'_html.txt','w',encoding='utf8')
