@@ -1,4 +1,4 @@
-var domainName = 'test.corelab.dev'
+var domainName = 'domainName'
 
 const recordBtn = document.querySelector('.record-btn')
 const player = document.querySelector('.audio-player')
@@ -112,7 +112,7 @@ function useDemo() {
   fetch('/use_demo?id=' + document.getElementById('demo').value, {
     method: 'get',
   }).then(res => res.text()).then(res => {
-    id = res.split('_')[0] + '_' + res.split('_')[1]
+    id = res.split('_')[1]+'_' + res.split('_')[2]
     tag = res + '.wav'
     // console.log(res)
     var url = 'https://' + domainName + '/demo/' + id + '.wav'

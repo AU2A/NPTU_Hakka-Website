@@ -138,10 +138,11 @@ def main():
                 output_file.write(str(int(round(librosa.get_duration(path=path)/15))))
                 output_file.close()
 
-                print('base model loaded.')
-                if path[0:2]=='ha':
+                if file_name[0:2]=='ha':
+                    print('hakka base model loaded.')
                     transcribe = model_hakka.transcribe(audio=path)
                 else:
+                    print('base model loaded.')
                     transcribe = model_base.transcribe(audio=path)
                 segments = transcribe['segments']
                 print('openai/decode/'+file_name+'_html.txt')

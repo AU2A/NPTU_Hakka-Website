@@ -62,7 +62,7 @@ function reloadurl() {
     lyric = ''
     player.loadVideoById(videoId = val, startSeconds = 0)
     if (!errorStatus) {
-        fetch('https://' + domainName + '/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
+        fetch('https://' + domainName + ':5001/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
             method: 'get',
         }).then(res => res.text()).then(res => {
             if (document.getElementById('lang').value == 0) {

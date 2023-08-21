@@ -32,7 +32,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-var domainName = 'test.corelab.dev'
+var domainName = 'domainName'
 
 var privateKey = fs.readFileSync('keys/privkey.pem', 'utf8')
 var certificate = fs.readFileSync('keys/cert.pem', 'utf8')
@@ -110,21 +110,21 @@ app.get('/use_demo', (req, res) => {
   tag = req.originalUrl.split('id=')[1]
   if (tag == '0') {
     orfileName = 'hakka_test1'
-    fileName = 'hakka_test1_' + Date.now()
+    fileName = 'ha_hakka_test1_' + Date.now()
   }
   else if (tag == '1') {
     orfileName = 'hakka_test2'
-    fileName = 'hakka_test2_' + Date.now()
+    fileName = 'ha_hakka_test2_' + Date.now()
   }
   else if (tag == '2') {
     orfileName = 'hakka_test3'
-    fileName = 'hakka_test3_' + Date.now()
+    fileName = 'ha_hakka_test3_' + Date.now()
   }
 
   execSync('cp website/demo/' + orfileName + '.wav upload/' + fileName + '.wav', { shell: 'bash', encoding: 'utf-8' })
   execSync('sox upload/' + fileName + '.wav -e signed -c 1 -r 16000 -b 16 upload/' + fileName + '.new.wav', { shell: 'bash', encoding: 'utf-8' })
   execSync('mv upload/' + fileName + '.new.wav upload/' + fileName + '.wav', { shell: 'bash', encoding: 'utf-8' })
-  execSync('echo \"upload/' + fileName + '.wav\" >> decodeList.txt', { shell: 'bash', encoding: 'utf-8' })
+  execSync('echo \"upload/' + fileName + '.wav\" >> aidecodeList.txt', { shell: 'bash', encoding: 'utf-8' })
 
   res.send(fileName)
 })

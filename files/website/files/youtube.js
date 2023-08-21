@@ -1,4 +1,4 @@
-var domainName = 'test.corelab.dev'
+var domainName = 'domainName'
 
 var tag = document.createElement('script')
 tag.src = 'https://www.youtube.com/iframe_api'

@@ -52,8 +52,8 @@ content = f.readlines()
 for i in range(17):
     o.write(content[i])
 
-o.write('            <a class="btn" href="https://'+domain+'/">音檔辨識</a>\n')
-o.write('            <a class="btn" href="https://'+domain+'/youtube">影片辨識</a>\n')
+o.write('            <a class="btn" href="https://'+domain+':5001/">音檔辨識</a>\n')
+o.write('            <a class="btn" href="https://'+domain+':5001/youtube">影片辨識</a>\n')
 
 for i in range(19,len(content)):
     o.write(content[i])
@@ -69,8 +69,8 @@ content = f.readlines()
 for i in range(15):
     o.write(content[i])
 
-o.write('            <a class="btn" href="https://'+domain+'/">音檔辨識</a>\n')
-o.write('            <a class="btn" href="https://'+domain+'/youtube">影片辨識</a>\n')
+o.write('            <a class="btn" href="https://'+domain+':5001/">音檔辨識</a>\n')
+o.write('            <a class="btn" href="https://'+domain+':5001/youtube">影片辨識</a>\n')
 
 for i in range(17,len(content)):
     o.write(content[i])
