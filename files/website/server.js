@@ -12,14 +12,12 @@ var date = new Date()
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
-// app.set('demo', './demo')
 
 app.use(express.static('static'))
 app.use(express.static(__dirname, { dotfiles: 'allow' }))
 
 app.use(express.static(__dirname + '/files'))
 
-// app.use(express.static(__dirname + '/demo'))
 
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
@@ -32,7 +30,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-var domainName = 'domainName'
+var domainName = 'local.corelab.dev'
 
 var privateKey = fs.readFileSync('keys/privkey.pem', 'utf8')
 var certificate = fs.readFileSync('keys/cert.pem', 'utf8')
@@ -44,9 +42,6 @@ var credentials = {
 }
 
 app.get('/', (req, res) => {
-  // fs.writeFile('decode/output.txt', '', (err) => {
-  //   if (err) throw err
-  // })
   res.render('index')
 })
 app.get('/youtube', (req, res) => {
@@ -139,13 +134,13 @@ https.createServer(credentials, app).listen(port, function () {
 
 
 const app2 = express()
-const port2 = 5002
+const port2 = 5003
 
 app2.use(cors())
 
 const corsOptions = {
   origin: [
-    'https://localhost:5002',
+    'https://localhost:5003',
   ],
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
   allowedHeaders: ['Content-Type', 'Authorization'],
@@ -158,24 +153,13 @@ app2.get('/decode', (req, res) => {
   var temp = ''
   try {
     temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
-    // if (tag.split('_')[0] == 'ai') {
-    //   temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
-    // } else {
-    //   temp = fs.readFileSync('decode/' + tag + '.txt', 'utf8')
-    // }
   } catch {
     temp = ''
-    // console.log('wait for ' + tag)
   }
   if (temp == '') {
     temp = '請稍後 '
     try {
       temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
-      // if (tag.split('_')[0] == 'ai') {
-      //   temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
-      // } else {
-      //   temp += fs.readFileSync('decode/time_' + tag + '.txt', 'utf8')
-      // }
     } catch {
       temp += 'na'
     }
@@ -190,7 +174,6 @@ app2.get('/decodeyt', (req, res) => {
     temp = fs.readFileSync('openai/decode/' + tag + '.srt', 'utf8')
   } catch {
     temp = ''
-    // console.log('wait for ' + tag)
   }
   if (temp == '') {
     temp = '請稍後 '

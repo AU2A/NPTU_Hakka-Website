@@ -1,4 +1,4 @@
-var domainName = 'domainName'
+var domainName = 'local.corelab.dev'
 
 const recordBtn = document.querySelector('.record-btn')
 const player = document.querySelector('.audio-player')
@@ -84,7 +84,6 @@ if (navigator.mediaDevices.getUserMedia) {
 const $input = document.querySelector('#upload')
 $input.addEventListener('change', event => {
   uploadAudio(event.target.files[0])
-  // console.log(event.target.files[0])
 })
 
 //上傳音檔
@@ -108,14 +107,12 @@ function uploadAudio(bin) {
 }
 
 function useDemo() {
-  // console.log(document.getElementById('demo').value)
   fetch('/use_demo?id=' + document.getElementById('demo').value, {
     method: 'get',
   }).then(res => res.text()).then(res => {
     id = res.split('_')[1]+'_' + res.split('_')[2]
     tag = res + '.wav'
-    // console.log(res)
-    var url = 'https://' + domainName + '/demo/' + id + '.wav'
+    var url = 'https://' + domainName + ':5001/demo/' + id + '.wav'
     $('#src').attr('src', url)
     document.getElementById('audio').load()
     document.getElementById('downloadBtn').href = url
@@ -126,7 +123,6 @@ function useDemo() {
     fetch('/demo/' + id + '.txt', {
       method: 'get',
     }).then(res => res.text()).then(res => {
-      // console.log(res)
       document.getElementById('demoResponse').innerHTML = res
       document.getElementById('demoResponse').hidden = false
     })
@@ -152,7 +148,7 @@ function refreshDecode() {
     document.getElementById('response').innerHTML = '請上傳副檔名為.wav的檔案'
   }
   else if (tag != '') {
-    fetch('https://' + domainName + ':5002/decode?tag=' + tag, {
+    fetch('https://' + domainName + ':5003/decode?tag=' + tag, {
       method: 'get',
     }).then(res => res.text()).then(res => {
       if (res.split(' ')[0] == '請稍後') {

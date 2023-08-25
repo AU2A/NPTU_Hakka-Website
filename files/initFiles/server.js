@@ -12,14 +12,12 @@ var date = new Date()
 
 app.set('view engine', 'ejs')
 app.set('views', './views')
-// app.set('demo', './demo')
 
 app.use(express.static('static'))
 app.use(express.static(__dirname, { dotfiles: 'allow' }))
 
 app.use(express.static(__dirname + '/files'))
 
-// app.use(express.static(__dirname + '/demo'))
 
 const storage = multer.diskStorage({
   filename: function (req, file, cb) {
@@ -44,9 +42,6 @@ var credentials = {
 }
 
 app.get('/', (req, res) => {
-  // fs.writeFile('decode/output.txt', '', (err) => {
-  //   if (err) throw err
-  // })
   res.render('index')
 })
 app.get('/youtube', (req, res) => {
@@ -158,24 +153,13 @@ app2.get('/decode', (req, res) => {
   var temp = ''
   try {
     temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
-    // if (tag.split('_')[0] == 'ai') {
-    //   temp = fs.readFileSync('openai/decode/' + tag + '_html.txt', 'utf8')
-    // } else {
-    //   temp = fs.readFileSync('decode/' + tag + '.txt', 'utf8')
-    // }
   } catch {
     temp = ''
-    // console.log('wait for ' + tag)
   }
   if (temp == '') {
     temp = '請稍後 '
     try {
       temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
-      // if (tag.split('_')[0] == 'ai') {
-      //   temp += fs.readFileSync('openai/decode/time_' + tag + '_html.txt', 'utf8')
-      // } else {
-      //   temp += fs.readFileSync('decode/time_' + tag + '.txt', 'utf8')
-      // }
     } catch {
       temp += 'na'
     }
@@ -190,7 +174,6 @@ app2.get('/decodeyt', (req, res) => {
     temp = fs.readFileSync('openai/decode/' + tag + '.srt', 'utf8')
   } catch {
     temp = ''
-    // console.log('wait for ' + tag)
   }
   if (temp == '') {
     temp = '請稍後 '

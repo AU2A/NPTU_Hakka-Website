@@ -1,4 +1,4 @@
-var domainName = 'domainName'
+var domainName = 'local.corelab.dev'
 
 var tag = document.createElement('script')
 tag.src = 'https://www.youtube.com/iframe_api'
@@ -62,7 +62,7 @@ function reloadurl() {
     lyric = ''
     player.loadVideoById(videoId = val, startSeconds = 0)
     if (!errorStatus) {
-        fetch('https://' + domainName + '/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
+        fetch('https://' + domainName + ':5001/uploadyt?url=' + val + '&model=' + document.getElementById('lang').value, {
             method: 'get',
         }).then(res => res.text()).then(res => {
             if (document.getElementById('lang').value == 0) {
@@ -97,13 +97,13 @@ function reloadurl() {
 function autoRefresh() {
     if (!errorStatus && tagurl != '') {
         console.log(player.playerInfo.currentTime)
-        fetch('https://' + domainName + ':5002/decodeyt?tag=' + tagurl, {
+        fetch('https://' + domainName + ':5003/decodeyt?tag=' + tagurl, {
             method: 'get',
         }).then(res => res.text()).then(res => {
             lyric = res.split('*****')
         })
         if (hakka == true) {
-            fetch('https://' + domainName + ':5002/decodeyt?tag=' + tagurl.split('!!!')[0] + '!!!1', {
+            fetch('https://' + domainName + ':5003/decodeyt?tag=' + tagurl.split('!!!')[0] + '!!!1', {
                 method: 'get',
             }).then(res => res.text()).then(res => {
                 lyric_hakka = res.split('*****')
